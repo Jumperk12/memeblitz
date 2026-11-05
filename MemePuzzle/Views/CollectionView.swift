@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 /// The redesigned Meme Vault: A premium collectible gallery featuring completion tracking,

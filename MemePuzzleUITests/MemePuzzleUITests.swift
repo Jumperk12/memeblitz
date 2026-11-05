@@ -1,7 +1,7 @@
 import XCTest
 
 /// End-to-end competitive gameplay through real touch gestures on the simulator.
-final class MemePuzzleUITests: XCTestCase {
+final class MemeBlitzUITests: XCTestCase {
     /// Must match `DragGeometry.liftOffset`: the floating tile is drawn this far above the finger.
     private let liftOffset: CGFloat = 56
 

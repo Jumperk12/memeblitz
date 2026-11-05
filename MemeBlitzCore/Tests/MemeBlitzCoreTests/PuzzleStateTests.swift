@@ -1,5 +1,5 @@
 import XCTest
-@testable import MemePuzzleCore
+@testable import MemeBlitzCore
 
 final class PuzzleStateTests: XCTestCase {
     private func makeState(missing: Int = 6, seed: UInt64 = 3) throws -> PuzzleState {

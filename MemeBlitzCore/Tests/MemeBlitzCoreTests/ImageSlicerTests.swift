@@ -1,6 +1,6 @@
 import CoreGraphics
 import XCTest
-@testable import MemePuzzleCore
+@testable import MemeBlitzCore
 
 /// Test helpers for building images with known pixels and reading them back.
 enum TestImage {

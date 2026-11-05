@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 /// Displays one cropped piece of the meme as a tactile 3D arcade block.

@@ -1,5 +1,5 @@
 import Foundation
-import MemePuzzleCore
+import MemeBlitzCore
 
 public struct DailyBlitzManager {
     public static let totalDays = 100

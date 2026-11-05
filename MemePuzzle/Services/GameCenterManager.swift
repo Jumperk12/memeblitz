@@ -43,7 +43,7 @@ public final class GameCenterManager: NSObject, ObservableObject, GKGameCenterCo
     // MARK: - Authentication
 
     /// Authenticates the local player with Game Center.
-    /// Should be called on app launch from `MemePuzzleApp` or `RootView.onAppear`.
+    /// Should be called on app launch from `MemeBlitzApp` or `RootView.onAppear`.
     public func authenticateLocalPlayer() {
         guard !hasConfiguredAuthHandler else { return }
         hasConfiguredAuthHandler = true

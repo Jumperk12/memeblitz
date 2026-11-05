@@ -1,4 +1,4 @@
-name: MemePuzzle
+name: MemeBlitz
 options:
   bundleIdPrefix: com.novalabs
   deploymentTarget:
@@ -10,19 +10,19 @@ settings:
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Automatic
 packages:
-  MemePuzzleCore:
-    path: MemePuzzleCore
+  MemeBlitzCore:
+    path: MemeBlitzCore
   GoogleMobileAds:
     url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
     from: 11.0.0
 targets:
-  MemePuzzle:
+  MemeBlitz:
     type: application
     platform: iOS
     sources:
       - path: MemePuzzle
     dependencies:
-      - package: MemePuzzleCore
+      - package: MemeBlitzCore
       - package: GoogleMobileAds
         product: GoogleMobileAds
     info:
@@ -39,17 +39,17 @@ targets:
     sources:
       - path: MemePuzzleUITests
     dependencies:
-      - target: MemePuzzle
+      - target: MemeBlitz
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.novalabs.memeblitz.uitests
         GENERATE_INFOPLIST_FILE: YES
 schemes:
-  MemePuzzle:
+  MemeBlitz:
     build:
       targets:
-        MemePuzzle: all
+        MemeBlitz: all
     test:
       targets:
-        - package: MemePuzzleCore/MemePuzzleCoreTests
+        - package: MemeBlitzCore/MemeBlitzCoreTests
         - MemePuzzleUITests

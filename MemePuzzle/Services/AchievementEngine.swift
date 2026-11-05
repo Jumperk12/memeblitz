@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 // MARK: - A. Achievement Categories

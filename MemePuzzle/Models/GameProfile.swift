@@ -1,5 +1,5 @@
 import Foundation
-import MemePuzzleCore
+import MemeBlitzCore
 import Observation
 
 /// Durable player progress, personal best records, settings, and achievements.

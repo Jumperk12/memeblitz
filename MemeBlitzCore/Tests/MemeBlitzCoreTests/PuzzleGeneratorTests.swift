@@ -1,5 +1,5 @@
 import XCTest
-@testable import MemePuzzleCore
+@testable import MemeBlitzCore
 
 final class PuzzleGeneratorTests: XCTestCase {
     func testDefaultConfigurationIsTenByTen() {

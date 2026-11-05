@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 /// Arcade-style modal popup displayed when every missing tile is correctly placed.

@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 /// Constants shared by the tray tiles and the floating drag preview.

@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import PhotosUI
 import SwiftUI
 

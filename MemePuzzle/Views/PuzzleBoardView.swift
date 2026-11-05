@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 /// Pixel-aligned tile geometry so neighbouring tiles meet without hairline seams.

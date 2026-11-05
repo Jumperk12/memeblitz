@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 /// Arcade Level Select UI showing all meme stages for a specific difficulty mode.

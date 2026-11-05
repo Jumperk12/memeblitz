@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 /// Hosts a single puzzle: competitive countdown header, framed board, tray, drag overlay, and completion/failure states.

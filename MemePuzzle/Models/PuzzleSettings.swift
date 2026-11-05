@@ -1,5 +1,5 @@
 import Foundation
-import MemePuzzleCore
+import MemeBlitzCore
 
 /// Centralized player state: selected difficulty mode.
 ///

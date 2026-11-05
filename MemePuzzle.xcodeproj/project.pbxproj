@@ -193,7 +193,7 @@
 		3E0EAD58308CE1128B8D1730 /* extreme_152.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D734122FCCCA1E320CC0FE84 /* extreme_152.jpg */; };
 		3EDA4E73D33B18A4274E5299 /* daily_026.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0DED5F397A1AD54981D50E47 /* daily_026.jpg */; };
 		3EEAFDA62D173768D9C78D92 /* extreme_085.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8C75E39AD6ABF7B64474DA38 /* extreme_085.jpg */; };
-		3F7B97D7433C48904ABCCF46 /* MemePuzzleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4AD73A4B3615108081765F8 /* MemePuzzleApp.swift */; };
+		3F7B97D7433C48904ABCCF46 /* MemeBlitzApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4AD73A4B3615108081765F8 /* MemeBlitzApp.swift */; };
 		3F7F88F74562C48BB4108AB2 /* hard_059.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EE3D30D12D46C5259092C4C1 /* hard_059.jpg */; };
 		3FB063E6E46EF9559F0A0D17 /* daily_089.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 24F6AF25800BD2510CC70C16 /* daily_089.jpg */; };
 		3FC0130AC822D628FEB1C561 /* meme_tada.wav in Resources */ = {isa = PBXBuildFile; fileRef = F4AD4608A305CC853CA3BBD4 /* meme_tada.wav */; };
@@ -554,7 +554,7 @@
 		A2659676CDF1E99F3DD6B974 /* easy_071.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1C5239FCEFC392D7A0777B1A /* easy_071.jpg */; };
 		A2AA1BC50F4A96A9C99BF7CF /* extreme_009.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2C8EACE0FFC912F3854F409 /* extreme_009.jpg */; };
 		A2E45CFAB55696DCD4EB5AE4 /* extreme_144.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7DE23E2FF672F51A72237812 /* extreme_144.jpg */; };
-		A3510B7B1096D2914B4091C5 /* MemePuzzleCore in Frameworks */ = {isa = PBXBuildFile; productRef = B5CD498456ABA02F4FD14025 /* MemePuzzleCore */; };
+		A3510B7B1096D2914B4091C5 /* MemeBlitzCore in Frameworks */ = {isa = PBXBuildFile; productRef = B5CD498456ABA02F4FD14025 /* MemeBlitzCore */; };
 		A385B52C60479DDFE804CEA1 /* daily_043.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 74FB3EC8A1DE02610164CA19 /* daily_043.jpg */; };
 		A38D26A924E1BADA9ADCED96 /* extreme_130.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 543858A785CFFDFE1EE620F3 /* extreme_130.jpg */; };
 		A3BBBDBB76D026FBB307CF2C /* TileTrayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA527E3364C51DAF6EA16FD5 /* TileTrayView.swift */; };
@@ -848,7 +848,7 @@
 			containerPortal = 83872A0E7B9DD9D8E067547D /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 663FB159A294623B0CF79BC6;
-			remoteInfo = MemePuzzle;
+			remoteInfo = MemeBlitz;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1311,7 +1311,7 @@
 		8D574C066B673A70C185128A /* extreme_128.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = extreme_128.jpg; sourceTree = "<group>"; };
 		8D64D7A9A2BDE0E2CB8B1056 /* hard_166.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hard_166.jpg; sourceTree = "<group>"; };
 		8D8AEA13306CE05599C4AD02 /* easy_054.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = easy_054.jpg; sourceTree = "<group>"; };
-		8DF6BBD5C2B6E075FBF0BF2E /* MemePuzzleCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MemePuzzleCore; sourceTree = SOURCE_ROOT; };
+		8DF6BBD5C2B6E075FBF0BF2E /* MemeBlitzCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MemeBlitzCore; sourceTree = SOURCE_ROOT; };
 		8E32D3C5CE106E2A69AB9250 /* extreme_046.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = extreme_046.jpg; sourceTree = "<group>"; };
 		8E8D8EFC6C77405108DA0FE5 /* extreme_119.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = extreme_119.jpg; sourceTree = "<group>"; };
 		8E933AE63EE026DD58DAF857 /* hard_153.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hard_153.jpg; sourceTree = "<group>"; };
@@ -1437,7 +1437,7 @@
 		B3D6A259BD5E6B3296A9016E /* easy_059.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = easy_059.jpg; sourceTree = "<group>"; };
 		B40F6D2378234516EF9F1C16 /* extreme_022.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = extreme_022.jpg; sourceTree = "<group>"; };
 		B498EB502C3F0910A9ABE2AB /* hard_124.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hard_124.jpg; sourceTree = "<group>"; };
-		B4AD73A4B3615108081765F8 /* MemePuzzleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemePuzzleApp.swift; sourceTree = "<group>"; };
+		B4AD73A4B3615108081765F8 /* MemeBlitzApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeBlitzApp.swift; sourceTree = "<group>"; };
 		B4D97DB20193609BB5AAD7F9 /* daily_025.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = daily_025.jpg; sourceTree = "<group>"; };
 		B53089C20143924E8958FA91 /* extreme_069.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = extreme_069.jpg; sourceTree = "<group>"; };
 		B606E37EEE1CA2F4104FABA7 /* hard_023.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hard_023.jpg; sourceTree = "<group>"; };
@@ -1545,7 +1545,7 @@
 		CFB85036C781366ED475ACD5 /* easy_017.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = easy_017.jpg; sourceTree = "<group>"; };
 		CFE95B64C5C04E86BECEA2F9 /* daily_040.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = daily_040.jpg; sourceTree = "<group>"; };
 		D0E1828F545651035351A941 /* extreme_103.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = extreme_103.jpg; sourceTree = "<group>"; };
-		D1010B95EDEAEBC5130CB9A1 /* MemePuzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemePuzzle.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1010B95EDEAEBC5130CB9A1 /* MemeBlitz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemeBlitz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D183E331F9CCB5F2FDCECCD2 /* hard_094.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hard_094.jpg; sourceTree = "<group>"; };
 		D25BB9892C54AF54F12F4E1B /* hard_136.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hard_136.jpg; sourceTree = "<group>"; };
 		D272573AF0CC4C7A982E20D2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -1696,7 +1696,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3510B7B1096D2914B4091C5 /* MemePuzzleCore in Frameworks */,
+				A3510B7B1096D2914B4091C5 /* MemeBlitzCore in Frameworks */,
 				D2DA5CBCAD89BDC98D42D493 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1707,7 +1707,7 @@
 		038644AEF385E3A9301C94AA /* App */ = {
 			isa = PBXGroup;
 			children = (
-				B4AD73A4B3615108081765F8 /* MemePuzzleApp.swift */,
+				B4AD73A4B3615108081765F8 /* MemeBlitzApp.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1715,7 +1715,7 @@
 		03C9A09530A5F4929C353DB6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D1010B95EDEAEBC5130CB9A1 /* MemePuzzle.app */,
+				D1010B95EDEAEBC5130CB9A1 /* MemeBlitz.app */,
 				13ABEC9028EE1D5E34672DFD /* MemePuzzleUITests.xctest */,
 			);
 			name = Products;
@@ -1861,7 +1861,7 @@
 		5AF12BBE4AB9FB93DC537CB9 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				8DF6BBD5C2B6E075FBF0BF2E /* MemePuzzleCore */,
+				8DF6BBD5C2B6E075FBF0BF2E /* MemeBlitzCore */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -2653,9 +2653,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		663FB159A294623B0CF79BC6 /* MemePuzzle */ = {
+		663FB159A294623B0CF79BC6 /* MemeBlitz */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DFCB71CA411C913AAA5FA5F7 /* Build configuration list for PBXNativeTarget "MemePuzzle" */;
+			buildConfigurationList = DFCB71CA411C913AAA5FA5F7 /* Build configuration list for PBXNativeTarget "MemeBlitz" */;
 			buildPhases = (
 				40518BAD201D41BEB04C9446 /* Sources */,
 				C5272591A7662377477D21F9 /* Resources */,
@@ -2665,13 +2665,13 @@
 			);
 			dependencies = (
 			);
-			name = MemePuzzle;
+			name = MemeBlitz;
 			packageProductDependencies = (
-				B5CD498456ABA02F4FD14025 /* MemePuzzleCore */,
+				B5CD498456ABA02F4FD14025 /* MemeBlitzCore */,
 				83DEE019B2F8DBA2502313AC /* GoogleMobileAds */,
 			);
-			productName = MemePuzzle;
-			productReference = D1010B95EDEAEBC5130CB9A1 /* MemePuzzle.app */;
+			productName = MemeBlitz;
+			productReference = D1010B95EDEAEBC5130CB9A1 /* MemeBlitz.app */;
 			productType = "com.apple.product-type.application";
 		};
 		EEF6C62AB22CA16ACF5D0D1C /* MemePuzzleUITests */ = {
@@ -2721,14 +2721,14 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9B6D89604036A5EFA638B4E3 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
-				0CCF4D7342A3AC47DD274A6C /* XCLocalSwiftPackageReference "MemePuzzleCore" */,
+				0CCF4D7342A3AC47DD274A6C /* XCLocalSwiftPackageReference "MemeBlitzCore" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 03C9A09530A5F4929C353DB6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				663FB159A294623B0CF79BC6 /* MemePuzzle */,
+				663FB159A294623B0CF79BC6 /* MemeBlitz */,
 				EEF6C62AB22CA16ACF5D0D1C /* MemePuzzleUITests */,
 			);
 		};
@@ -3564,7 +3564,7 @@
 				BA27A872E37B6D4EDA6FA857 /* LevelSelectView.swift in Sources */,
 				9655FA0150FF129D0FBC01DD /* MemeCatalog.swift in Sources */,
 				6F8C64BDBD57CADB2C9AED76 /* MemeDetailView.swift in Sources */,
-				3F7B97D7433C48904ABCCF46 /* MemePuzzleApp.swift in Sources */,
+				3F7B97D7433C48904ABCCF46 /* MemeBlitzApp.swift in Sources */,
 				B98129F78A47F3229CD3F2BA /* MemeRenderer.swift in Sources */,
 				61F3EAA7EE662806F7768B05 /* PuzzleBoardView.swift in Sources */,
 				1B261CAC85CB1F2DA161AF90 /* PuzzleScreen.swift in Sources */,
@@ -3595,7 +3595,7 @@
 /* Begin PBXTargetDependency section */
 		1085DF984346D9DABFA1AFD7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 663FB159A294623B0CF79BC6 /* MemePuzzle */;
+			target = 663FB159A294623B0CF79BC6 /* MemeBlitz */;
 			targetProxy = 46B98000422E84201ADF43E0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -3610,7 +3610,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 852FF84PP7;
 				INFOPLIST_FILE = MemePuzzle/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = memeBlitz;
+				INFOPLIST_KEY_CFBundleDisplayName = "Meme Blitz";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.arcade-games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3701,7 +3701,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 852FF84PP7;
 				INFOPLIST_FILE = MemePuzzle/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = memeBlitz;
+				INFOPLIST_KEY_CFBundleDisplayName = "Meme Blitz";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.arcade-games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3794,7 +3794,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MemePuzzle;
+				TEST_TARGET_NAME = MemeBlitz;
 			};
 			name = Release;
 		};
@@ -3816,7 +3816,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MemePuzzle;
+				TEST_TARGET_NAME = MemeBlitz;
 			};
 			name = Debug;
 		};
@@ -3841,7 +3841,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		DFCB71CA411C913AAA5FA5F7 /* Build configuration list for PBXNativeTarget "MemePuzzle" */ = {
+		DFCB71CA411C913AAA5FA5F7 /* Build configuration list for PBXNativeTarget "MemeBlitz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3AA0B7AE6938123E1FF888B0 /* Debug */,
@@ -3853,9 +3853,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		0CCF4D7342A3AC47DD274A6C /* XCLocalSwiftPackageReference "MemePuzzleCore" */ = {
+		0CCF4D7342A3AC47DD274A6C /* XCLocalSwiftPackageReference "MemeBlitzCore" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = MemePuzzleCore;
+			relativePath = MemeBlitzCore;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -3876,9 +3876,9 @@
 			package = 9B6D89604036A5EFA638B4E3 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
 		};
-		B5CD498456ABA02F4FD14025 /* MemePuzzleCore */ = {
+		B5CD498456ABA02F4FD14025 /* MemeBlitzCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MemePuzzleCore;
+			productName = MemeBlitzCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

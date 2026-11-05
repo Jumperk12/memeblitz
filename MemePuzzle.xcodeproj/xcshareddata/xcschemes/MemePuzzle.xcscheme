@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1430"
-   version = "1.7">
+   version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES"
-      runPostActionsOnFailure = "NO">
+      buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -16,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "663FB159A294623B0CF79BC6"
-               BuildableName = "MemePuzzle.app"
-               BlueprintName = "MemePuzzle"
+               BuildableName = "MemeBlitz.app"
+               BlueprintName = "MemeBlitz"
                ReferencedContainer = "container:MemePuzzle.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -27,14 +26,13 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      onlyGenerateCoverageForSpecifiedTargets = "NO">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "663FB159A294623B0CF79BC6"
-            BuildableName = "MemePuzzle.app"
-            BlueprintName = "MemePuzzle"
+            BuildableName = "MemeBlitz.app"
+            BlueprintName = "MemeBlitz"
             ReferencedContainer = "container:MemePuzzle.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -44,15 +42,14 @@
             parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MemePuzzleCoreTests"
-               BuildableName = "MemePuzzleCoreTests"
-               BlueprintName = "MemePuzzleCoreTests"
-               ReferencedContainer = "container:MemePuzzleCore">
+               BlueprintIdentifier = "MemeBlitzCoreTests"
+               BuildableName = "MemeBlitzCoreTests"
+               BlueprintName = "MemeBlitzCoreTests"
+               ReferencedContainer = "container:MemeBlitzCore">
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "NO">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EEF6C62AB22CA16ACF5D0D1C"
@@ -62,8 +59,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <CommandLineArguments>
-      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -80,8 +75,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "663FB159A294623B0CF79BC6"
-            BuildableName = "MemePuzzle.app"
-            BlueprintName = "MemePuzzle"
+            BuildableName = "MemeBlitz.app"
+            BlueprintName = "MemeBlitz"
             ReferencedContainer = "container:MemePuzzle.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -97,8 +92,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "663FB159A294623B0CF79BC6"
-            BuildableName = "MemePuzzle.app"
-            BlueprintName = "MemePuzzle"
+            BuildableName = "MemeBlitz.app"
+            BlueprintName = "MemeBlitz"
             ReferencedContainer = "container:MemePuzzle.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

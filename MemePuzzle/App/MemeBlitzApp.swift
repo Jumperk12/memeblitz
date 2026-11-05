@@ -1,9 +1,9 @@
 import GoogleMobileAds
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 @main
-struct MemePuzzleApp: App {
+struct MemeBlitzApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {

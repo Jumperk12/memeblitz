@@ -1,4 +1,4 @@
-import MemePuzzleCore
+import MemeBlitzCore
 import SwiftUI
 
 /// Compatibility wrapper forwarding to the redesigned arcade-style TimeUpPopupView.

@@ -64,14 +64,14 @@ curl -X POST http://localhost:3000/api/memes/upload \
 
 ### 1. Pure Swift Core Tests (SPM)
 ```bash
-cd MemePuzzleCore
+cd MemeBlitzCore
 swift test
 # 28 tests, 0 failures
 ```
 
 ### 2. Full iOS Simulator Test Suite
 ```bash
-xcodebuild test -project MemePuzzle.xcodeproj -scheme MemePuzzle \
+xcodebuild test -project MemePuzzle.xcodeproj -scheme MemeBlitz \
   -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.6' \
   -derivedDataPath /tmp/memepuzzle-dd CODE_SIGNING_ALLOWED=NO
 # 35 tests, 0 failures (All passed)
