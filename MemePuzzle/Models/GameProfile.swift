@@ -32,6 +32,17 @@ public final class GameProfile: @unchecked Sendable {
         didSet { save() }
     }
 
+    public var notificationsEnabled: Bool = true {
+        didSet {
+            save()
+            if notificationsEnabled {
+                NotificationManager.shared.scheduleInactivityReminders()
+            } else {
+                NotificationManager.shared.cancelAllReminders()
+            }
+        }
+    }
+
     public var selectedSoundPack: SoundPack = .randomMix {
         didSet {
             UserDefaults.standard.set(selectedSoundPack.rawValue, forKey: "settings.soundPack")
@@ -467,6 +478,9 @@ public final class GameProfile: @unchecked Sendable {
         if defaults.object(forKey: "profile.hapticsEnabled") != nil {
             hapticsEnabled = defaults.bool(forKey: "profile.hapticsEnabled")
         }
+        if defaults.object(forKey: "profile.notificationsEnabled") != nil {
+            notificationsEnabled = defaults.bool(forKey: "profile.notificationsEnabled")
+        }
         if let diffRaw = defaults.string(forKey: "settings.difficulty"),
            let diff = DifficultyMode(rawValue: diffRaw) {
             selectedDifficulty = diff
@@ -594,6 +608,7 @@ public final class GameProfile: @unchecked Sendable {
         defaults.set(soundEnabled, forKey: "profile.soundEnabled")
         defaults.set(musicEnabled, forKey: "profile.musicEnabled")
         defaults.set(hapticsEnabled, forKey: "profile.hapticsEnabled")
+        defaults.set(notificationsEnabled, forKey: "profile.notificationsEnabled")
         defaults.set(Array(completedMemeIDs), forKey: "profile.completedMemeIDs")
         defaults.set(Array(completedModes), forKey: "profile.completedModes")
         defaults.set(Array(unlockedAchievementIDs), forKey: "profile.unlockedAchievements")

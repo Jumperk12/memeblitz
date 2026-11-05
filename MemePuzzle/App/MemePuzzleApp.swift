@@ -18,6 +18,7 @@ struct MemePuzzleApp: App {
         }
         GameCenterManager.shared.authenticateLocalPlayer()
         AudioManager.shared.startBackgroundMusic()
+        NotificationManager.shared.requestAuthorizationIfNeeded()
     }
 
     var body: some Scene {
@@ -29,9 +30,11 @@ struct MemePuzzleApp: App {
             case .active:
                 GameProfile.shared.syncWithCloudStorage()
                 AudioManager.shared.resumeBackgroundMusic()
+                NotificationManager.shared.cancelAllReminders()
             case .inactive, .background:
                 GameProfile.shared.saveNow()
                 AudioManager.shared.pauseBackgroundMusic()
+                NotificationManager.shared.scheduleInactivityReminders()
             @unknown default:
                 break
             }

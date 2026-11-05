@@ -44,6 +44,11 @@ struct SettingsSheet: View {
                     }
                 }
 
+                Section("Notifications") {
+                    Toggle("Daily Challenge & Streak Reminders", isOn: $profile.notificationsEnabled)
+                        .tint(Theme.neonViolet)
+                }
+
                 Section("Default Difficulty") {
                     Picker("Difficulty Mode", selection: $profile.selectedDifficulty) {
                         Text("Easy (6×6)").tag(DifficultyMode.easy)
