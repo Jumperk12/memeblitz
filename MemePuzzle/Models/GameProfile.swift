@@ -172,10 +172,25 @@ public final class GameProfile: @unchecked Sendable {
     }
 
     private let defaults: UserDefaults
+    private var isLoading = false
+
+    private var backupFileURL: URL {
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        return docs.appendingPathComponent("memeblitz_profile_backup.json")
+    }
 
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         load()
+
+        // Listen for iCloud external changes across devices or background sync
+        NotificationCenter.default.addObserver(
+            forName: NSUbiquitousKeyValueStore.didChangeExternallyNotification,
+            object: NSUbiquitousKeyValueStore.default,
+            queue: .main
+        ) { [weak self] _ in
+            self?.syncWithCloudStorage()
+        }
     }
 
     public var formattedBestTime: String {
@@ -416,12 +431,24 @@ public final class GameProfile: @unchecked Sendable {
         ]
         for key in keys {
             defaults.removeObject(forKey: key)
+            NSUbiquitousKeyValueStore.default.removeObject(forKey: key)
         }
         defaults.synchronize()
+        NSUbiquitousKeyValueStore.default.synchronize()
+        try? FileManager.default.removeItem(at: backupFileURL)
         save()
     }
 
     private func load() {
+        guard !isLoading else { return }
+        isLoading = true
+        defer {
+            isLoading = false
+            // Run a clean flush once everything is merged
+            save()
+        }
+
+        // 1. Load from local UserDefaults
         if defaults.object(forKey: "profile.bestTime") != nil {
             bestTime = defaults.double(forKey: "profile.bestTime")
         }
@@ -430,12 +457,6 @@ public final class GameProfile: @unchecked Sendable {
         }
         if let memeDict = defaults.dictionary(forKey: "profile.bestTimesByMeme") as? [String: Double] {
             bestTimesByMeme = memeDict
-        }
-        if let modes = defaults.stringArray(forKey: "profile.completedModes") {
-            completedModes = Set(modes.filter { modeStr in
-                guard let mode = DifficultyMode(rawValue: modeStr) else { return false }
-                return isModeFullyCompleted(mode)
-            })
         }
         if defaults.object(forKey: "profile.soundEnabled") != nil {
             soundEnabled = defaults.bool(forKey: "profile.soundEnabled")
@@ -471,18 +492,97 @@ public final class GameProfile: @unchecked Sendable {
 
         if defaults.object(forKey: "profile.totalXP") != nil {
             totalXP = defaults.integer(forKey: "profile.totalXP")
-        } else {
-            // Retroactively grant baseline XP from existing completions
-            totalXP = completedMemeIDs.count * 100 + unlockedAchievementIDs.count * 150
         }
         currentStreak = defaults.integer(forKey: "profile.currentStreak")
         highestStreak = defaults.integer(forKey: "profile.highestStreak")
         lastCompletedDailyDate = defaults.string(forKey: "profile.lastCompletedDailyDate")
         dailyStreak = defaults.integer(forKey: "profile.dailyStreak")
         highestDailyStreak = defaults.integer(forKey: "profile.highestDailyStreak")
+
+        // 2. Multi-tier Merge from iCloud and Local Documents Backup (survives app deletion & reinstall)
+        syncWithCloudStorage()
+        mergeFromLocalBackup()
+
+        // 3. Re-evaluate completed modes cleanly
+        for mode in DifficultyMode.allCases {
+            if isModeFullyCompleted(mode) {
+                completedModes.insert(mode.rawValue)
+            }
+        }
+
+        if totalXP == 0 && !completedMemeIDs.isEmpty {
+            totalXP = completedMemeIDs.count * 100 + unlockedAchievementIDs.count * 150
+        }
+    }
+
+    /// Syncs and merges progress from Apple iCloud Key-Value Storage (preserves data after app re-installation).
+    public func syncWithCloudStorage() {
+        let cloud = NSUbiquitousKeyValueStore.default
+        cloud.synchronize()
+
+        if let cloudMemes = cloud.array(forKey: "profile.completedMemeIDs") as? [String] {
+            completedMemeIDs.formUnion(cloudMemes)
+        }
+        if let cloudAchievements = cloud.array(forKey: "profile.unlockedAchievements") as? [String] {
+            unlockedAchievementIDs.formUnion(cloudAchievements)
+        }
+        if let cloudUnlocked = cloud.dictionary(forKey: "profile.unlockedLevelByMode") as? [String: Int] {
+            for (m, lvl) in cloudUnlocked {
+                let existing = unlockedLevelByMode[m] ?? 0
+                unlockedLevelByMode[m] = max(existing, lvl)
+            }
+        }
+        let cloudSolved = Int(cloud.longLong(forKey: "profile.totalSolvedCount"))
+        if cloudSolved > totalSolvedCount {
+            totalSolvedCount = cloudSolved
+        }
+        let cloudXP = Int(cloud.longLong(forKey: "profile.totalXP"))
+        if cloudXP > totalXP {
+            totalXP = cloudXP
+        }
+        let cloudStreak = Int(cloud.longLong(forKey: "profile.dailyStreak"))
+        if cloudStreak > dailyStreak {
+            dailyStreak = cloudStreak
+        }
+        let cloudHighStreak = Int(cloud.longLong(forKey: "profile.highestDailyStreak"))
+        if cloudHighStreak > highestDailyStreak {
+            highestDailyStreak = cloudHighStreak
+        }
+        if let cloudDailyDate = cloud.string(forKey: "profile.lastCompletedDailyDate"), lastCompletedDailyDate == nil {
+            lastCompletedDailyDate = cloudDailyDate
+        }
+    }
+
+    /// Restores unlocked achievements and leaderboards from Apple Game Center account.
+    public func restoreFromGameCenter(achievements: [String], totalSolved: Int? = nil, xp: Int? = nil, dailyStreak: Int? = nil) {
+        let previousCount = unlockedAchievementIDs.count
+        unlockedAchievementIDs.formUnion(achievements)
+        for id in achievements where achievementUnlockDates[id] == nil {
+            achievementUnlockDates[id] = Date()
+        }
+        if let totalSolved, totalSolved > totalSolvedCount {
+            totalSolvedCount = totalSolved
+        }
+        if let xp, xp > totalXP {
+            totalXP = xp
+        }
+        if let dailyStreak, dailyStreak > self.dailyStreak {
+            self.dailyStreak = dailyStreak
+        }
+        if unlockedAchievementIDs.count > previousCount || totalSolved != nil {
+            save()
+        }
+    }
+
+    /// Explicit flush called on app backgrounding or termination to guarantee zero data loss.
+    public func saveNow() {
+        save()
     }
 
     private func save() {
+        guard !isLoading else { return }
+
+        // 1. Save to local UserDefaults
         if let bestTime {
             defaults.set(bestTime, forKey: "profile.bestTime")
         } else {
@@ -507,5 +607,80 @@ public final class GameProfile: @unchecked Sendable {
         defaults.set(lastCompletedDailyDate, forKey: "profile.lastCompletedDailyDate")
         defaults.set(dailyStreak, forKey: "profile.dailyStreak")
         defaults.set(highestDailyStreak, forKey: "profile.highestDailyStreak")
+        defaults.synchronize()
+
+        // 2. Mirror to Apple iCloud Key-Value Store (persists across device swaps and app reinstalls)
+        let cloud = NSUbiquitousKeyValueStore.default
+        cloud.set(Array(completedMemeIDs), forKey: "profile.completedMemeIDs")
+        cloud.set(Array(unlockedAchievementIDs), forKey: "profile.unlockedAchievements")
+        cloud.set(unlockedLevelByMode, forKey: "profile.unlockedLevelByMode")
+        cloud.set(Int64(totalSolvedCount), forKey: "profile.totalSolvedCount")
+        cloud.set(Int64(totalXP), forKey: "profile.totalXP")
+        cloud.set(Int64(dailyStreak), forKey: "profile.dailyStreak")
+        cloud.set(Int64(highestDailyStreak), forKey: "profile.highestDailyStreak")
+        if let lastCompletedDailyDate {
+            cloud.set(lastCompletedDailyDate, forKey: "profile.lastCompletedDailyDate")
+        }
+        cloud.synchronize()
+
+        // 3. Write Atomic JSON backup in Documents sandbox
+        writeBackupFile()
+    }
+
+    private func writeBackupFile() {
+        let snapshot: [String: Any] = [
+            "completedMemeIDs": Array(completedMemeIDs),
+            "unlockedAchievementIDs": Array(unlockedAchievementIDs),
+            "unlockedLevelByMode": unlockedLevelByMode,
+            "totalSolvedCount": totalSolvedCount,
+            "totalXP": totalXP,
+            "dailyStreak": dailyStreak,
+            "highestDailyStreak": highestDailyStreak,
+            "bestTimesByMeme": bestTimesByMeme
+        ]
+        if let data = try? JSONSerialization.data(withJSONObject: snapshot, options: [.prettyPrinted]) {
+            try? data.write(to: backupFileURL, options: [.atomic])
+        }
+    }
+
+    private func mergeFromLocalBackup() {
+        guard let data = try? Data(contentsOf: backupFileURL),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return
+        }
+
+        if let memes = json["completedMemeIDs"] as? [String] {
+            completedMemeIDs.formUnion(memes)
+        }
+        if let ach = json["unlockedAchievementIDs"] as? [String] {
+            unlockedAchievementIDs.formUnion(ach)
+        }
+        if let unlocked = json["unlockedLevelByMode"] as? [String: Int] {
+            for (m, lvl) in unlocked {
+                let existing = unlockedLevelByMode[m] ?? 0
+                unlockedLevelByMode[m] = max(existing, lvl)
+            }
+        }
+        if let solved = json["totalSolvedCount"] as? Int, solved > totalSolvedCount {
+            totalSolvedCount = solved
+        }
+        if let xp = json["totalXP"] as? Int, xp > totalXP {
+            totalXP = xp
+        }
+        if let streak = json["dailyStreak"] as? Int, streak > dailyStreak {
+            dailyStreak = streak
+        }
+        if let highStreak = json["highestDailyStreak"] as? Int, highStreak > highestDailyStreak {
+            highestDailyStreak = highStreak
+        }
+        if let times = json["bestTimesByMeme"] as? [String: Double] {
+            for (meme, time) in times {
+                if let existing = bestTimesByMeme[meme] {
+                    if time < existing { bestTimesByMeme[meme] = time }
+                } else {
+                    bestTimesByMeme[meme] = time
+                }
+            }
+        }
     }
 }

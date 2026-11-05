@@ -58,6 +58,7 @@ public final class GameCenterManager: NSObject, ObservableObject, GKGameCenterCo
                 } else if GKLocalPlayer.local.isAuthenticated {
                     self.isAuthenticated = true
                     self.localPlayerName = GKLocalPlayer.local.displayName
+                    self.syncWithGameCenter()
                     #if DEBUG
                     print("🎮 GameCenter: Authenticated as \(GKLocalPlayer.local.displayName) (ID: \(GKLocalPlayer.local.gamePlayerID))")
                     #endif
@@ -70,6 +71,54 @@ public final class GameCenterManager: NSObject, ObservableObject, GKGameCenterCo
                     }
                     #endif
                 }
+            }
+        }
+    }
+
+    /// Syncs and restores achievements and personal leaderboard records from Game Center.
+    public func syncWithGameCenter() {
+        guard GKLocalPlayer.local.isAuthenticated else { return }
+
+        Task {
+            do {
+                let achievements = try await GKAchievement.loadAchievements()
+                let completedIDs = achievements.filter { $0.isCompleted || $0.percentComplete >= 100.0 }.map { $0.identifier }
+
+                var totalSolved: Int?
+                var playerXP: Int?
+                var dailyStreak: Int?
+
+                if let leaderboards = try? await GKLeaderboard.loadLeaderboards(IDs: [
+                    LeaderboardID.totalSolved,
+                    LeaderboardID.playerXP,
+                    LeaderboardID.dailyStreak
+                ]) {
+                    for lb in leaderboards {
+                        if let (entry, _) = try? await lb.loadEntries(for: [GKLocalPlayer.local], timeScope: .allTime),
+                           let validScore = entry?.score {
+                            if lb.baseLeaderboardID == LeaderboardID.totalSolved {
+                                totalSolved = validScore
+                            } else if lb.baseLeaderboardID == LeaderboardID.playerXP {
+                                playerXP = validScore
+                            } else if lb.baseLeaderboardID == LeaderboardID.dailyStreak {
+                                dailyStreak = validScore
+                            }
+                        }
+                    }
+                }
+
+                await MainActor.run {
+                    GameProfile.shared.restoreFromGameCenter(
+                        achievements: completedIDs,
+                        totalSolved: totalSolved,
+                        xp: playerXP,
+                        dailyStreak: dailyStreak
+                    )
+                }
+            } catch {
+                #if DEBUG
+                print("🎮 GameCenter: sync error: \(error.localizedDescription)")
+                #endif
             }
         }
     }

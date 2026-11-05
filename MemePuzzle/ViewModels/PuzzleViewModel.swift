@@ -376,6 +376,7 @@ final class PuzzleViewModel {
                         usedAd: didGrantContinue
                     )
                 }
+                GameProfile.shared.saveNow()
                 AudioManager.shared.playVictory()
                 withAnimation(.easeInOut(duration: 0.6)) { phase = .completed }
             }

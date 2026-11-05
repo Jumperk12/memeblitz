@@ -27,8 +27,10 @@ struct MemePuzzleApp: App {
         .onChange(of: scenePhase) { _, newPhase in
             switch newPhase {
             case .active:
+                GameProfile.shared.syncWithCloudStorage()
                 AudioManager.shared.resumeBackgroundMusic()
             case .inactive, .background:
+                GameProfile.shared.saveNow()
                 AudioManager.shared.pauseBackgroundMusic()
             @unknown default:
                 break
