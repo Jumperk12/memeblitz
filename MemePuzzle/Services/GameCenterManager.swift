@@ -151,9 +151,9 @@ public final class GameCenterManager: NSObject, ObservableObject, GKGameCenterCo
     /// Submits elapsed time in milliseconds to a time-based leaderboard.
     public func submitTime(seconds: Double, leaderboardID: String) {
         guard seconds > 0 else { return }
-        // App Store Connect elapsed time format expects integer centiseconds or milliseconds
-        let scoreMs = Int(seconds * 1000)
-        submitScore(scoreMs, leaderboardID: leaderboardID)
+        // Apple Game Center hundredths of a second expects integer centiseconds (1 second = 100 centiseconds)
+        let scoreCentiseconds = Int((seconds * 100.0).rounded())
+        submitScore(scoreCentiseconds, leaderboardID: leaderboardID)
     }
 
     // MARK: - Convenience Game Submissions
