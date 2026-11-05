@@ -1,0 +1,4 @@
+# ads-app.txt for Meme Blitz (iOS Bundle ID: com.novalabs.memeblitz)
+# Publisher: Nova Labs
+# https://support.google.com/admob/answer/9363762
+google.com, pub-6761529298065224, DIRECT, f08c47fec0942fa0

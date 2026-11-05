@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>MEME BLITZ — Solve Memes. Beat the Clock.</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css?v=mobile_fullbleed1">
+</head>
+<body class="arcade-body">
+  <!-- Fullscreen Launch Screen Animation -->
+  <div class="launch-screen-overlay" id="launch-screen">
+    <video id="launch-video" class="launch-video" playsinline muted autoplay preload="auto">
+      <source src="launch_animation.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="app-viewport" id="app-viewport">
+    
+    <!-- ========================================== -->
+    <!-- SCREEN 1: MEME BLITZ HOME SCREEN           -->
+    <!-- ========================================== -->
+    <div class="screen active" id="screen-home">
+      <!-- Top Bar -->
+      <header class="blitz-top-bar">
+        <button class="badge-pill" id="btn-top-stats" title="View Best Records & Stats">
+          <svg class="crown-icon-sm" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+          </svg>
+          <span class="badge-time" id="home-best-time">⚡ --:--</span>
+        </button>
+
+        <div class="top-bar-actions">
+          <button class="circle-btn" id="btn-top-sound" title="Toggle Sound">
+            <svg id="icon-sound-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <svg id="icon-sound-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </button>
+          <button class="circle-btn" id="btn-top-settings" title="Game Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Home Content -->
+      <div class="blitz-scroll-body">
+        
+        <!-- Hero Branding with Floating Cards -->
+        <section class="blitz-hero">
+          <!-- Floating Meme Cards -->
+          <button class="floating-meme-card float-tl" data-meme="easy_001" title="Easy Meme 1" type="button">
+            <img src="memes/easy_001.jpg" alt="Easy Meme 1">
+          </button>
+          <button class="floating-meme-card float-tr" data-meme="medium_001" title="Medium Meme 1" type="button">
+            <img src="memes/medium_001.jpg" alt="Medium Meme 1">
+          </button>
+          <button class="floating-meme-card float-bl" data-meme="hard_001" title="Hard Meme 1" type="button">
+            <img src="memes/hard_001.jpg" alt="Hard Meme 1">
+          </button>
+          <button class="floating-meme-card float-br" data-meme="extreme_001" title="Extreme Meme 1" type="button">
+            <img src="memes/extreme_001.jpg" alt="Extreme Meme 1">
+          </button>
+
+          <!-- Center Logo & Crown -->
+          <div class="logo-stack">
+            <img src="app_logo.png" alt="Meme Blitz" class="hero-app-logo">
+            <p class="hero-tagline">Solve Memes. Beat the Clock.</p>
+          </div>
+        </section>
+
+        <!-- Section: Daily Blitz Hero Card (100 Days of Horror Fantasy) -->
+        <section class="daily-blitz-section" id="daily-blitz-section">
+          <div class="daily-blitz-card" id="daily-blitz-card">
+            <div class="daily-card-top">
+              <div class="daily-thumb-box">
+                <img id="daily-card-thumb" src="daily_memes/daily_001.jpg" alt="Daily Blitz Artwork" class="daily-thumb-img">
+                <div class="daily-done-overlay" id="daily-done-overlay">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="daily-info-box">
+                <div class="daily-tags-row">
+                  <span class="daily-day-pill" id="daily-day-pill">DAY 01 OF 100</span>
+                  <span class="daily-streak-pill" id="daily-streak-pill" style="display:none;">🔥 0 STREAK</span>
+                </div>
+                <h3 class="daily-card-title">DAILY BLITZ</h3>
+                <p class="daily-card-sub">10×10 Hard · 32 Pcs · 120s Clock · -10s Eye</p>
+              </div>
+            </div>
+            <div class="daily-action-box">
+              <button class="btn-daily-play" id="btn-daily-play">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span>PLAY TODAY'S BLITZ</span>
+              </button>
+              <div class="daily-completed-banner" id="daily-completed-banner" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                </svg>
+                <span>COMPLETED TODAY — NEW PUZZLE AT MIDNIGHT</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Choose Your Difficulty -->
+        <section class="difficulty-section">
+          <div class="section-heading">
+            <span class="heading-bolt">⚡</span>
+            <h2>Choose Your Difficulty</h2>
+          </div>
+
+          <div class="diff-cards-column">
+            
+            <!-- Easy Card -->
+            <div class="diff-arcade-card easy" id="card-easy">
+              <div class="card-thumb-wrap">
+                <img src="memes/easy_001.jpg" alt="Easy Preview">
+                <span class="diff-tag-pill easy">EASY</span>
+              </div>
+              <div class="card-info">
+                <div class="card-title-row">
+                  <span class="card-icon">🍃</span>
+                  <span class="card-name">EASY</span>
+                </div>
+                <div class="card-specs">
+                  <span>6×6 Grid</span>
+                  <span class="spec-dot">•</span>
+                  <span>8 Pcs</span>
+                  <span class="spec-dot">•</span>
+                  <span>90s</span>
+                </div>
+              </div>
+              <button class="btn-play-pill easy" data-mode="easy">
+                PLAY
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+
+            <!-- Medium Card -->
+            <div class="diff-arcade-card medium" id="card-medium">
+              <div class="card-thumb-wrap">
+                <img src="memes/medium_001.jpg" alt="Medium Preview">
+                <span class="diff-tag-pill medium">MEDIUM</span>
+              </div>
+              <div class="card-info">
+                <div class="card-title-row">
+                  <span class="card-icon">⚡</span>
+                  <span class="card-name">MEDIUM</span>
+                </div>
+                <div class="card-specs">
+                  <span>8×8 Grid</span>
+                  <span class="spec-dot">•</span>
+                  <span>18 Pcs</span>
+                  <span class="spec-dot">•</span>
+                  <span>60s</span>
+                </div>
+              </div>
+              <button class="btn-play-pill medium" data-mode="medium">
+                PLAY
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+
+            <!-- Hard Card -->
+            <div class="diff-arcade-card hard" id="card-hard">
+              <div class="card-thumb-wrap">
+                <img src="memes/hard_001.jpg" alt="Hard Preview">
+                <span class="diff-tag-pill hard">HARD</span>
+              </div>
+              <div class="card-info">
+                <div class="card-title-row">
+                  <span class="card-icon">🔥</span>
+                  <span class="card-name">HARD</span>
+                </div>
+                <div class="card-specs">
+                  <span>10×10 Grid</span>
+                  <span class="spec-dot">•</span>
+                  <span>32 Pcs</span>
+                  <span class="spec-dot">•</span>
+                  <span>35s</span>
+                </div>
+              </div>
+              <button class="btn-play-pill hard" data-mode="hard">
+                PLAY
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+
+            <!-- Extreme Card -->
+            <div class="diff-arcade-card extreme" id="card-extreme">
+              <div class="card-thumb-wrap">
+                <img src="memes/extreme_001.jpg" alt="Extreme Preview">
+                <span class="diff-tag-pill extreme">EXTREME</span>
+              </div>
+              <div class="card-info">
+                <div class="card-title-row">
+                  <span class="card-icon">💀</span>
+                  <span class="card-name">EXTREME</span>
+                </div>
+                <div class="card-specs">
+                  <span>10×10 Grid</span>
+                  <span class="spec-dot">•</span>
+                  <span>48 Pcs</span>
+                  <span class="spec-dot">•</span>
+                  <span>20s</span>
+                </div>
+              </div>
+              <button class="btn-play-pill extreme" data-mode="extreme">
+                PLAY
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Spacing for bottom tab bar -->
+        <div class="bottom-spacer"></div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN: LEVEL SELECT / MEME STAGES        -->
+    <!-- ========================================== -->
+    <div class="screen" id="screen-levels">
+      <header class="level-select-header">
+        <button class="btn-level-back" id="btn-level-back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+          <span>Back</span>
+        </button>
+        <div class="level-header-title-box">
+          <h2 id="level-mode-title">EASY LEVELS</h2>
+          <span class="level-progress-badge" id="level-mode-progress">1 / 215 UNLOCKED</span>
+        </div>
+        <div class="header-right-empty"></div>
+      </header>
+
+      <div class="level-scroll-body">
+        <div class="level-cards-grid" id="level-cards-grid">
+          <!-- Dynamically populated level cards -->
+        </div>
+        <div class="bottom-spacer"></div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: MEME VAULT                       -->
+    <!-- ========================================== -->
+    <div class="screen" id="screen-collection">
+      <header class="tab-header vault-tab-header">
+        <div class="vault-header-card">
+          <div class="vault-title-row">
+            <div class="vault-title-left">
+              <span class="vault-tag">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 3h11a3 3 0 0 1 3 3v11"/><rect x="3" y="7" width="14" height="14" rx="2.5"/></svg>
+                MEME VAULT
+              </span>
+              <h2 id="vault-collected-title">0 of 676 Collected</h2>
+              <p class="collection-subtitle">Restore internet memes across all four difficulty ranks</p>
+            </div>
+            <div class="vault-percent-badge">
+              <span class="vault-percent-num" id="vault-percent-num">0%</span>
+              <span class="vault-percent-label">RESTORED</span>
+            </div>
+          </div>
+          <!-- Collection Progress Bar -->
+          <div class="vault-progress-track">
+            <div class="vault-progress-fill" id="vault-progress-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Difficulty Filter Pills -->
+        <div class="collection-filter-bar">
+          <button class="col-filter-btn active" data-filter="all" type="button">All <span class="filter-badge" id="filter-count-all">676</span></button>
+          <button class="col-filter-btn" data-filter="easy" type="button">Easy <span class="filter-badge" id="filter-count-easy">169</span></button>
+          <button class="col-filter-btn" data-filter="medium" type="button">Medium <span class="filter-badge" id="filter-count-med">169</span></button>
+          <button class="col-filter-btn" data-filter="hard" type="button">Hard <span class="filter-badge" id="filter-count-hard">169</span></button>
+          <button class="col-filter-btn" data-filter="extreme" type="button">Extreme Hard <span class="filter-badge" id="filter-count-ext">169</span></button>
+        </div>
+      </header>
+
+      <div class="tab-scroll-body">
+        <div class="meme-grid" id="meme-grid">
+          <!-- Injected dynamically -->
+        </div>
+
+        <div class="bottom-spacer"></div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 3: TROPHIES & ACHIEVEMENTS          -->
+    <!-- ========================================== -->
+    <div class="screen" id="screen-achievements">
+      <header class="tab-header trophies-tab-header">
+        <!-- Player Level Progression Card -->
+        <div class="trophies-profile-card">
+          <div class="trophies-profile-row">
+            <div class="player-lvl-badge">
+              <span class="lvl-label">LVL</span>
+              <span class="lvl-num" id="player-lvl-num">1</span>
+            </div>
+            <div class="trophies-xp-group">
+              <div class="xp-title-row">
+                <span class="xp-rank-label">ARCADE RANK</span>
+                <span class="xp-val-label" id="player-xp-val">0 XP</span>
+              </div>
+              <div class="xp-progress-track">
+                <div class="xp-progress-fill" id="player-xp-fill" style="width: 0%;"></div>
+              </div>
+              <div class="xp-sub-row">
+                <span id="player-xp-remaining">250 XP to Level 2</span>
+                <span id="player-xp-percent">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="trophies-stat-boxes">
+            <div class="trophy-stat-box">
+              <span class="tsb-label">SOLVED</span>
+              <span class="tsb-val" id="stat-solved-count">0</span>
+            </div>
+            <div class="trophy-stat-box">
+              <span class="tsb-label">STREAK</span>
+              <span class="tsb-val" id="stat-streak-count">0 🔥</span>
+            </div>
+            <div class="trophy-stat-box">
+              <span class="tsb-label">TROPHIES</span>
+              <span class="tsb-val" id="stat-trophies-count">0/18</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Featured Next Trophy Card -->
+        <div class="featured-trophy-card" id="featured-trophy-card">
+          <!-- Injected dynamically -->
+        </div>
+
+        <!-- Category filter bar -->
+        <div class="trophy-category-bar" id="trophy-category-bar">
+          <!-- Injected dynamically -->
+        </div>
+      </header>
+
+      <div class="tab-scroll-body">
+        <div class="achievements-categorized-list" id="achievements-list">
+          <!-- Injected dynamically -->
+        </div>
+        <div class="bottom-spacer"></div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 4: ACTIVE PUZZLE GAMEPLAY STAGE     -->
+    <!-- ========================================== -->
+    <div class="screen" id="screen-game">
+      <!-- Game Top Bar -->
+      <header class="app-header">
+        <div class="header-left">
+          <button id="btn-game-back" class="icon-btn" title="Back to Meme Blitz Home">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="title-group">
+            <div class="title-with-badge">
+              <h1 id="meme-title">Shocked Cat</h1>
+              <span class="mode-badge" id="mode-badge">EASY</span>
+            </div>
+            <div class="stats-line" id="stats-line">6×6 · 0 misses</div>
+          </div>
+        </div>
+        <div class="header-right">
+          <!-- Candy Crush Animated Countdown Ring -->
+          <div class="timer-ring-container" id="timer-container" title="Time Remaining">
+            <svg class="timer-svg" width="44" height="44" viewBox="0 0 44 44">
+              <circle class="timer-track" cx="22" cy="22" r="18"/>
+              <circle class="timer-fill" id="timer-ring-fill" cx="22" cy="22" r="18"/>
+            </svg>
+            <span class="timer-digits" id="timer-digits">90</span>
+          </div>
+
+          <button id="btn-peek" class="icon-btn" title="Hold or click to peek at full meme">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button id="btn-restart" class="icon-btn" title="Restart puzzle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Progress bar -->
+      <div class="progress-container">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+        <span class="progress-text" id="progress-text">0/8 placed</span>
+      </div>
+
+      <!-- Main Game Stage -->
+      <main class="game-stage">
+        <!-- Puzzle Board Frame -->
+        <div class="board-wrapper" id="board-wrapper">
+          <div class="puzzle-board" id="puzzle-board"></div>
+          <div class="peek-overlay" id="peek-overlay"></div>
+        </div>
+
+        <!-- Missing Pieces Tray -->
+        <section class="tray-container" id="tray-container">
+          <div class="tray-header">
+            <span class="tray-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h7v7H3V3zm11 0h7v7h-7V3zm-11 11h7v7H3v-7zm11 0h7v7h-7v-7z"/></svg>
+              Missing pieces
+            </span>
+            <span class="tray-hint" id="tray-hint">Drag piece to slot or tap to select</span>
+          </div>
+          <div class="tray-scroll" id="tray-scroll">
+            <div class="tray-grid" id="tray-grid"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PERSISTENT BOTTOM NAVIGATION TAB BAR       -->
+    <!-- ========================================== -->
+    <nav class="blitz-bottom-bar" id="blitz-bottom-bar" aria-label="Main Navigation">
+      <button class="nav-tab-btn active" data-tab="screen-home" id="tab-btn-home" aria-label="Blitz Play Mode">
+        <div class="tab-icon-wrap">
+          <svg class="tab-icon" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Jigsaw piece with Blitz bolt -->
+            <path d="M19.5 10c0-1.66-1.34-3-3-3h-2.17A3.001 3.001 0 0 0 12 5a3.001 3.001 0 0 0-2.33 2H7.5c-1.66 0-3 1.34-3 3v2.17A3.001 3.001 0 0 0 5 14.5a3.001 3.001 0 0 0 2 2.33V19c0 1.66 1.34 3 3 3h2.17A3.001 3.001 0 0 0 14.5 21a3.001 3.001 0 0 0 2.33-2h2.67c1.66 0 3-1.34 3-3v-2.17A3.001 3.001 0 0 0 21 11.5c0-.62-.19-1.2-.5-1.5z" opacity="0.85"/>
+            <path d="M11.5 8l-2.5 4h3.5l-1 4.5 4-5.5h-3.5z" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <span class="tab-label">Blitz</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="screen-collection" id="tab-btn-collection" aria-label="Meme Collection Vault">
+        <div class="tab-icon-wrap">
+          <svg class="tab-icon" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Stacked meme photo cards -->
+            <path d="M7 3h11a3 3 0 0 1 3 3v11" opacity="0.45"/>
+            <rect x="3" y="7" width="14" height="14" rx="2.5"/>
+            <circle cx="7.5" cy="11.5" r="1.3" fill="currentColor" stroke="none"/>
+            <path d="M3.5 18l3.5-3.5a1.2 1.2 0 0 1 1.7 0l4.3 4.3"/>
+            <path d="M11 16l1.2-1.2a1.2 1.2 0 0 1 1.7 0L17 17.5"/>
+          </svg>
+        </div>
+        <span class="tab-label">Meme Vault</span>
+      </button>
+
+      <button class="nav-tab-btn" data-tab="screen-achievements" id="tab-btn-achievements" aria-label="Trophies & Records">
+        <div class="tab-icon-wrap">
+          <svg class="tab-icon" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Arcade golden crown -->
+            <path d="M3 17h18l-2-10-4.5 4L12 4.5 9.5 11 5 7l-2 10z" fill="currentColor" fill-opacity="0.2"/>
+            <path d="M3 17h18l-2-10-4.5 4L12 4.5 9.5 11 5 7l-2 10z"/>
+            <circle cx="5" cy="7" r="1" fill="currentColor"/>
+            <circle cx="12" cy="4.5" r="1" fill="currentColor"/>
+            <circle cx="19" cy="7" r="1" fill="currentColor"/>
+            <path d="M5 20.5h14" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <span class="tab-label">Trophies</span>
+      </button>
+    </nav>
+
+  <!-- ========================================== -->
+  <!-- MODALS & OVERLAYS                          -->
+  <!-- ========================================== -->
+
+  <!-- Dedicated Meme Detail Inspection Modal -->
+  <div class="modal-backdrop" id="meme-detail-modal">
+    <div class="modal-sheet meme-detail-sheet">
+      <div class="sheet-handle"></div>
+      <div class="detail-header-row">
+        <button class="detail-close-btn" id="btn-close-meme-detail" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          Vault
+        </button>
+        <span class="detail-mode-badge" id="detail-mode-badge">EASY</span>
+      </div>
+
+      <div class="detail-art-card" id="detail-art-card">
+        <img id="detail-art-img" src="" alt="Meme Artwork" />
+        <div class="detail-locked-placeholder" id="detail-locked-art" style="display: none;">
+          <div class="mystery-lock-silhouette">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+            </svg>
+          </div>
+          <span class="detail-locked-chip" id="detail-locked-chip">🔒 UNCOLLECTED</span>
+        </div>
+        <span class="detail-solved-tag" id="detail-solved-tag">👑 SOLVED</span>
+      </div>
+
+      <div class="detail-title-group">
+        <h3 id="detail-meme-title">Meme #001</h3>
+        <span class="detail-meme-id" id="detail-meme-id">easy_001</span>
+      </div>
+
+      <div class="detail-unlock-callout" id="detail-unlock-callout" style="display: none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        <span id="detail-unlock-msg">Must unlock Meme #001 to play this one</span>
+      </div>
+
+      <div class="detail-specs-grid">
+        <div class="detail-spec-card">
+          <span class="dsc-label">DIFFICULTY</span>
+          <span class="dsc-val" id="detail-spec-difficulty">Easy</span>
+        </div>
+        <div class="detail-spec-card">
+          <span class="dsc-label">GRID SIZE</span>
+          <span class="dsc-val" id="detail-spec-grid">6×6</span>
+        </div>
+        <div class="detail-spec-card">
+          <span class="dsc-label">MISSING TILES</span>
+          <span class="dsc-val" id="detail-spec-pieces">8 Pieces</span>
+        </div>
+        <div class="detail-spec-card">
+          <span class="dsc-label">BEST TIME</span>
+          <span class="dsc-val" id="detail-spec-best">Unsolved</span>
+        </div>
+      </div>
+
+      <button class="detail-play-btn" id="btn-detail-play" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        PLAY PUZZLE
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats / Hall of Fame Modal -->
+  <div class="modal-backdrop" id="stats-modal">
+    <div class="modal-sheet stats-sheet">
+      <div class="sheet-handle"></div>
+      <div class="stats-crown-wrap">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="#fbbf24">
+          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+        </svg>
+      </div>
+      <h2>Hall of Fame</h2>
+      <p class="stats-sub">Your fastest blitz times and lifetime records</p>
+
+      <div class="records-grid">
+        <div class="record-card easy">
+          <span class="rec-label">EASY</span>
+          <strong class="rec-time" id="rec-easy-time">--:--</strong>
+          <span class="rec-sub">6×6 · 8 pcs</span>
+        </div>
+        <div class="record-card medium">
+          <span class="rec-label">MEDIUM</span>
+          <strong class="rec-time" id="rec-medium-time">--:--</strong>
+          <span class="rec-sub">8×8 · 18 pcs</span>
+        </div>
+        <div class="record-card hard">
+          <span class="rec-label">HARD</span>
+          <strong class="rec-time" id="rec-hard-time">--:--</strong>
+          <span class="rec-sub">10×10 · 32 pcs</span>
+        </div>
+        <div class="record-card extreme">
+          <span class="rec-label">EXTREME</span>
+          <strong class="rec-time" id="rec-extreme-time">--:--</strong>
+          <span class="rec-sub">10×10 · 48 pcs</span>
+        </div>
+      </div>
+
+      <div class="lifetime-stats-box">
+        <div class="l-stat">
+          <span class="l-num" id="stat-total-solved">0</span>
+          <span class="l-desc">Memes Solved</span>
+        </div>
+        <div class="l-stat">
+          <span class="l-num" id="stat-total-mistakes">0</span>
+          <span class="l-desc">Mistakes</span>
+        </div>
+      </div>
+
+      <button class="btn-sheet-close" id="btn-close-stats">Done</button>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settings-modal">
+    <div class="modal-sheet settings-sheet">
+      <div class="sheet-handle"></div>
+      <h2>Settings</h2>
+      
+      <div class="settings-group">
+        <div class="setting-row">
+          <span>Sound Effects</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-sound" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <span>Haptic / Vibration</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-haptics" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="setting-row-vertical">
+          <span class="setting-title">Default Difficulty</span>
+          <div class="diff-btn-toggle">
+            <button class="diff-toggle-btn active" data-diff="easy">Easy</button>
+            <button class="diff-toggle-btn" data-diff="medium">Medium</button>
+            <button class="diff-toggle-btn" data-diff="hard">Hard</button>
+            <button class="diff-toggle-btn" data-diff="extreme">Extreme</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group danger-group">
+        <button class="btn-reset-danger" id="btn-reset-data">Reset Player Data</button>
+      </div>
+
+      <button class="btn-sheet-close" id="btn-close-settings">Close</button>
+    </div>
+  </div>
+
+  <!-- Failure / Time's Up Modal -->
+  <div class="modal-backdrop" id="fail-modal">
+    <div class="modal-sheet fail-sheet">
+      <div class="fail-icon">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </div>
+      <h2>Time’s Up!</h2>
+      <p>The countdown reached zero before the meme was restored.</p>
+      
+      <div class="fail-progress-box">
+        <div class="progress-details">
+          <span class="progress-title">Your Progress</span>
+          <strong id="fail-progress-text">0 of 8 pieces placed</strong>
+          <span id="fail-remaining-text">8 pieces remaining</span>
+        </div>
+        <div class="progress-circle-wrap">
+          <svg width="44" height="44" viewBox="0 0 44 44">
+            <circle cx="22" cy="22" r="18" class="fail-circle-bg"/>
+            <circle cx="22" cy="22" r="18" class="fail-circle-fill" id="fail-circle-fill"/>
+          </svg>
+          <span id="fail-percent">0%</span>
+        </div>
+      </div>
+
+      <div class="fail-actions">
+        <button class="btn-rewarded" id="btn-watch-ad">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm6 2.5v7l6-3.5-6-3.5z"/></svg>
+          Watch Ad to Continue (+20s)
+        </button>
+        <div class="fail-subactions">
+          <button class="btn-secondary" id="btn-fail-levels">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+            Levels
+          </button>
+          <button class="btn-secondary" id="btn-fail-modes">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            Change Mode
+          </button>
+        </div>
+        <button class="btn-retry-full" id="btn-fail-retry">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Try Again
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completion / Win Modal -->
+  <div class="modal-backdrop" id="win-modal">
+    <div class="modal-sheet win-sheet">
+      <div class="win-emoji">🎉</div>
+      <h2>Meme Restored!</h2>
+      <p id="win-subtitle">The meme is back in one piece.</p>
+      
+      <div class="win-stats">
+        <div class="win-stat">
+          <span class="stat-num" id="win-time">0:45</span>
+          <span class="stat-lbl">Time</span>
+        </div>
+        <div class="win-stat">
+          <span class="stat-num" id="win-moves">14</span>
+          <span class="stat-lbl">Moves</span>
+        </div>
+        <div class="win-stat">
+          <span class="stat-num" id="win-accuracy">93%</span>
+          <span class="stat-lbl">Accuracy</span>
+        </div>
+      </div>
+
+      <div class="win-actions">
+        <button class="btn-win-next" id="btn-win-new">
+          Next Level
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <div class="win-subactions">
+          <button class="btn-secondary" id="btn-win-replay">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Replay
+          </button>
+          <button class="btn-secondary" id="btn-win-levels">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+            Levels
+          </button>
+          <button class="btn-secondary" id="btn-win-home">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Home
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast-notify"></div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <script src="game.js?v=blitz17"></script>
+</body>
+</html>
