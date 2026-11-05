@@ -35,10 +35,12 @@ public final class GameProfile: @unchecked Sendable {
     public var notificationsEnabled: Bool = true {
         didSet {
             save()
-            if notificationsEnabled {
-                NotificationManager.shared.scheduleInactivityReminders()
-            } else {
-                NotificationManager.shared.cancelAllReminders()
+            Task { @MainActor in
+                if GameProfile.shared.notificationsEnabled {
+                    NotificationManager.shared.scheduleInactivityReminders()
+                } else {
+                    NotificationManager.shared.cancelAllReminders()
+                }
             }
         }
     }

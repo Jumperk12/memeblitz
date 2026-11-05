@@ -18,7 +18,6 @@ struct MemePuzzleApp: App {
         }
         GameCenterManager.shared.authenticateLocalPlayer()
         AudioManager.shared.startBackgroundMusic()
-        NotificationManager.shared.requestAuthorizationIfNeeded()
     }
 
     var body: some Scene {
@@ -74,6 +73,7 @@ struct RootView: View {
     @State private var activeLevelSelectMode: DifficultyMode? = nil
     @State private var isShowingLaunchScreen = true
     @StateObject private var trackingManager = AppTrackingManager.shared
+    @StateObject private var notificationManager = NotificationManager.shared
 
     var body: some View {
         ZStack {
@@ -106,6 +106,9 @@ struct RootView: View {
                 LaunchScreenView {
                     isShowingLaunchScreen = false
                     trackingManager.checkAndRequestTracking()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+                        notificationManager.checkAndPromptIfNeeded()
+                    }
                 }
                 .transition(.opacity)
                 .zIndex(999)
@@ -120,12 +123,37 @@ struct RootView: View {
 
                     TrackingExplainerView {
                         trackingManager.requestNativeTracking()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                            notificationManager.checkAndPromptIfNeeded()
+                        }
                     }
                     .padding(.horizontal, 20)
                     .transition(.scale(scale: 0.93).combined(with: .opacity))
                 }
                 .animation(.spring(response: 0.35, dampingFraction: 0.8), value: trackingManager.showTrackingExplainer)
                 .zIndex(500)
+            }
+
+            // In-App Notification Permission Request (Allow / Don't Allow)
+            if notificationManager.showNotificationPrompt && !trackingManager.showTrackingExplainer {
+                ZStack {
+                    Color.black.opacity(0.68)
+                        .ignoresSafeArea()
+                        .transition(.opacity)
+
+                    NotificationPromptView(
+                        onAllow: {
+                            notificationManager.allowNotifications()
+                        },
+                        onDeny: {
+                            notificationManager.denyNotifications()
+                        }
+                    )
+                    .padding(.horizontal, 20)
+                    .transition(.scale(scale: 0.93).combined(with: .opacity))
+                }
+                .animation(.spring(response: 0.35, dampingFraction: 0.8), value: notificationManager.showNotificationPrompt)
+                .zIndex(501)
             }
         }
         .animation(.snappy(duration: 0.35), value: session?.id)
