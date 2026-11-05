@@ -5,10 +5,11 @@ import SwiftUI
 @main
 struct MemePuzzleApp: App {
     init() {
+        #if DEBUG
         GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [
-            "9f87e6d072f0cfc222745c3968d25169",
-            GADSimulatorID
+            "9f87e6d072f0cfc222745c3968d25169"
         ]
+        #endif
         GADMobileAds.sharedInstance().start(completionHandler: nil)
         Task {
             await RewardedAdService.shared.preload()
