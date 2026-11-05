@@ -27,24 +27,6 @@ targets:
         product: GoogleMobileAds
     info:
       path: MemePuzzle/Info.plist
-      properties:
-        CFBundleDisplayName: Meme Blitz
-        CFBundleShortVersionString: "1.0"
-        CFBundleVersion: "1"
-        GADApplicationIdentifier: ca-app-pub-6761529298065224~9369004306
-        UILaunchScreen:
-          UIColorName: ""
-        UIApplicationSceneManifest:
-          UIApplicationSupportsMultipleScenes: false
-        UISupportedInterfaceOrientations:
-          - UIInterfaceOrientationPortrait
-        UISupportedInterfaceOrientations~ipad:
-          - UIInterfaceOrientationPortrait
-          - UIInterfaceOrientationPortraitUpsideDown
-          - UIInterfaceOrientationLandscapeLeft
-          - UIInterfaceOrientationLandscapeRight
-        UIRequiresFullScreen: false
-        ITSAppUsesNonExemptEncryption: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.novalabs.memeblitz

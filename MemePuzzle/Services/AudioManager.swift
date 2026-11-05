@@ -52,8 +52,76 @@ public final class AudioManager {
     private var player: AVAudioPlayer?
     private var tickPlayer: AVAudioPlayer?
     private var urgentPlayer: AVAudioPlayer?
+    private var musicPlayer: AVAudioPlayer?
 
     private init() {}
+
+    // MARK: - Background Music (Meme Style Arcade Loop)
+
+    /// Starts or prepares the background meme music loop.
+    public func startBackgroundMusic() {
+        guard musicPlayer == nil else {
+            if GameProfile.shared.musicEnabled && !(musicPlayer?.isPlaying ?? false) {
+                musicPlayer?.play()
+            }
+            return
+        }
+
+        let candidateURLs: [URL?] = [
+            Bundle.main.url(forResource: "bgm_meme_loop", withExtension: "m4a", subdirectory: "Sounds"),
+            Bundle.main.url(forResource: "bgm_meme_loop", withExtension: "m4a"),
+            Bundle.main.url(forResource: "bgm_meme_loop", withExtension: "wav", subdirectory: "Sounds"),
+            Bundle.main.url(forResource: "bgm_meme_loop", withExtension: "wav")
+        ]
+
+        guard let musicURL = candidateURLs.compactMap({ $0 }).first else {
+            return
+        }
+
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+            let newMusicPlayer = try AVAudioPlayer(contentsOf: musicURL)
+            newMusicPlayer.numberOfLoops = -1 // Infinite loop
+            newMusicPlayer.volume = 0.35 // Balanced arcade background volume
+            newMusicPlayer.prepareToPlay()
+            musicPlayer = newMusicPlayer
+
+            if GameProfile.shared.musicEnabled {
+                newMusicPlayer.play()
+            }
+        } catch {
+            // Audio session or decoder issue; fail gracefully
+        }
+    }
+
+    /// Pauses the background music (e.g. app sent to background, or video ad playing).
+    public func pauseBackgroundMusic() {
+        if musicPlayer?.isPlaying == true {
+            musicPlayer?.pause()
+        }
+    }
+
+    /// Resumes the background music if enabled in player profile.
+    public func resumeBackgroundMusic() {
+        guard GameProfile.shared.musicEnabled else { return }
+        if let musicPlayer {
+            if !musicPlayer.isPlaying {
+                musicPlayer.play()
+            }
+        } else {
+            startBackgroundMusic()
+        }
+    }
+
+    /// Reacts immediately when user toggles the Music switch in Settings.
+    public func updateMusicState() {
+        if GameProfile.shared.musicEnabled {
+            resumeBackgroundMusic()
+        } else {
+            pauseBackgroundMusic()
+        }
+    }
 
     public func playTap() {
         guard GameProfile.shared.soundEnabled else { return }

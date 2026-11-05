@@ -155,6 +155,8 @@ public final class RewardedAdService: NSObject, RewardedAdServiceProtocol, GADFu
             return .failure(.noRootViewController)
         }
 
+        AudioManager.shared.pauseBackgroundMusic()
+
         return await withCheckedContinuation { continuation in
             self.presentationContinuation = continuation
 
@@ -172,6 +174,7 @@ public final class RewardedAdService: NSObject, RewardedAdServiceProtocol, GADFu
 
     public nonisolated func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
         Task { @MainActor in
+            AudioManager.shared.resumeBackgroundMusic()
             self.rewardedAd = nil
             self.isShowing = false
             let granted = self.didGrantReward
@@ -194,6 +197,7 @@ public final class RewardedAdService: NSObject, RewardedAdServiceProtocol, GADFu
         didFailToPresentFullScreenContentWithError error: Error
     ) {
         Task { @MainActor in
+            AudioManager.shared.resumeBackgroundMusic()
             self.rewardedAd = nil
             self.isShowing = false
 

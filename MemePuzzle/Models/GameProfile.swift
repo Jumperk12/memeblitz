@@ -20,7 +20,12 @@ public final class GameProfile: @unchecked Sendable {
     }
 
     public var musicEnabled: Bool = true {
-        didSet { save() }
+        didSet {
+            save()
+            Task { @MainActor in
+                AudioManager.shared.updateMusicState()
+            }
+        }
     }
 
     public var hapticsEnabled: Bool = true {

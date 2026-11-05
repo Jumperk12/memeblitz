@@ -4,6 +4,8 @@ import SwiftUI
 
 @main
 struct MemePuzzleApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
     init() {
         #if DEBUG
         GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [
@@ -15,11 +17,22 @@ struct MemePuzzleApp: App {
             await RewardedAdService.shared.preload()
         }
         GameCenterManager.shared.authenticateLocalPlayer()
+        AudioManager.shared.startBackgroundMusic()
     }
 
     var body: some Scene {
         WindowGroup {
             RootView()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            switch newPhase {
+            case .active:
+                AudioManager.shared.resumeBackgroundMusic()
+            case .inactive, .background:
+                AudioManager.shared.pauseBackgroundMusic()
+            @unknown default:
+                break
+            }
         }
     }
 }
