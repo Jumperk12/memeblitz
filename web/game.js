@@ -101,6 +101,10 @@ function initBGM() {
 
 function playBGM() {
   if (profile.musicEnabled === false) return;
+  const launchOverlay = document.getElementById('launch-screen');
+  if (launchOverlay && !launchOverlay.classList.contains('launch-dismissed') && launchOverlay.style.display !== 'none') {
+    return;
+  }
   initBGM();
   if (bgmAudio && bgmAudio.paused) {
     bgmAudio.play().catch(() => {});
@@ -1990,26 +1994,22 @@ function initLaunchScreen() {
     if (profile.musicEnabled !== false) {
       playBGM();
     }
+
+    // Fallback if browser blocked BGM autoplay until a click after launch
+    const startBGMOnGameClick = () => {
+      if (profile.musicEnabled !== false) {
+        playBGM();
+      }
+      window.removeEventListener('pointerdown', startBGMOnGameClick);
+      window.removeEventListener('keydown', startBGMOnGameClick);
+    };
+    window.addEventListener('pointerdown', startBGMOnGameClick, { once: true });
+    window.addEventListener('keydown', startBGMOnGameClick, { once: true });
   }
 
   // Ensure video sound is enabled
   video.muted = false;
   video.volume = 1.0;
-
-  // Clicking during launch ensures audio context is active, unmutes video, and queues BGM
-  const unlockAudio = () => {
-    try {
-      video.muted = false;
-      video.volume = 1.0;
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      initBGM();
-    } catch (_) {}
-  };
-  overlay.addEventListener('pointerdown', unlockAudio);
-  window.addEventListener('pointerdown', unlockAudio, { once: true });
-  window.addEventListener('keydown', unlockAudio, { once: true });
 
   video.addEventListener('ended', () => {
     dismissLaunchScreen();
@@ -2021,27 +2021,44 @@ function initLaunchScreen() {
 
   const playPromise = video.play();
   if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      // Browser blocked unmuted autoplay before user interaction:
-      // Fallback to muted playback so animation runs, and unmute on first tap
+    playPromise.catch((err) => {
+      console.warn('[LaunchVideo] Unmuted autoplay blocked by browser policy:', err);
+      // Fallback: play muted as initial fallback so video frames move, and show unmute prompt
       video.muted = true;
       video.play().catch(() => {});
-      const tryUnmute = () => {
-        video.muted = false;
-        video.volume = 1.0;
-        unlockAudio();
-        window.removeEventListener('pointerdown', tryUnmute);
-        window.removeEventListener('keydown', tryUnmute);
+
+      let unmutePill = document.getElementById('launch-unmute-pill');
+      if (!unmutePill) {
+        unmutePill = document.createElement('div');
+        unmutePill.id = 'launch-unmute-pill';
+        unmutePill.className = 'launch-unmute-pill';
+        unmutePill.innerHTML = `<span>🔊 Tap for sound</span>`;
+        overlay.appendChild(unmutePill);
+      }
+
+      const doUnmuteAndRestart = (e) => {
+        if (e) {
+          e.stopPropagation();
+        }
+        try {
+          video.muted = false;
+          video.volume = 1.0;
+          video.currentTime = 0;
+          video.play().catch(() => {});
+          if (unmutePill) unmutePill.remove();
+        } catch (_) {}
+        window.removeEventListener('pointerdown', doUnmuteAndRestart);
+        window.removeEventListener('keydown', doUnmuteAndRestart);
       };
-      window.addEventListener('pointerdown', tryUnmute, { once: true });
-      window.addEventListener('keydown', tryUnmute, { once: true });
+      window.addEventListener('pointerdown', doUnmuteAndRestart, { once: true });
+      window.addEventListener('keydown', doUnmuteAndRestart, { once: true });
     });
   }
 
-  // Fallback safety timeout (video duration is ~5.97s)
+  // Fallback safety timeout (video duration is ~5.97s + buffer)
   setTimeout(() => {
     dismissLaunchScreen();
-  }, 6800);
+  }, 7500);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -2426,15 +2443,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     challengeBanner.onclick = openLeaderboard;
   }
   rotateCompetitiveChallengeQuote();
-
-  // BGM Autoplay on First Interaction
-  function tryAutoStartBGM() {
-    if (profile.musicEnabled !== false) {
-      playBGM();
-    }
-  }
-  window.addEventListener('pointerdown', tryAutoStartBGM, { once: true });
-  window.addEventListener('keydown', tryAutoStartBGM, { once: true });
 
   document.querySelectorAll('.diff-toggle-btn').forEach(btn => {
     btn.onclick = () => {

@@ -3501,6 +3501,36 @@ input:checked + .slider:before {
   background-color: transparent;
 }
 
+.launch-unmute-pill {
+  position: absolute;
+  bottom: max(28px, env(safe-area-inset-bottom, 28px) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 14, 32, 0.88);
+  border: 1.5px solid rgba(251, 191, 36, 0.7);
+  box-shadow: 0 0 24px rgba(251, 191, 36, 0.45), 0 4px 18px rgba(0, 0, 0, 0.6);
+  color: #fbbf24;
+  font-size: 0.86rem;
+  font-weight: 800;
+  padding: 10px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  animation: pulsePill 1.5s ease-in-out infinite;
+  user-select: none;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+@keyframes pulsePill {
+  0%, 100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 16px rgba(251, 191, 36, 0.3); }
+  50% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 28px rgba(251, 191, 36, 0.65); }
+}
+
 .btn-skip-launch {
   position: absolute;
   top: max(20px, env(safe-area-inset-top, 20px) + 12px);
