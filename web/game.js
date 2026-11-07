@@ -493,7 +493,17 @@ try {
 
 function loadProfile() {
   try {
-    const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+    let raw = null;
+    // 1. Check CrazyGames SDK Data Module (Cloud Sync for logged in players)
+    if (window.CrazyGames?.SDK?.data?.getItem) {
+      try {
+        raw = window.CrazyGames.SDK.data.getItem(PROFILE_STORAGE_KEY);
+      } catch (_) {}
+    }
+    // 2. Fallback to localStorage
+    if (!raw) {
+      raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+    }
     if (raw) {
       const data = JSON.parse(raw);
       Object.assign(profile, data);
@@ -512,8 +522,16 @@ function loadProfile() {
 }
 
 function saveProfile() {
+  const jsonStr = JSON.stringify(profile);
+  // 1. Sync to CrazyGames SDK Data Module (Cross-device Cloud Save)
   try {
-    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    if (window.CrazyGames?.SDK?.data?.setItem) {
+      window.CrazyGames.SDK.data.setItem(PROFILE_STORAGE_KEY, jsonStr);
+    }
+  } catch (e) {}
+  // 2. Keep local fallback in sync
+  try {
+    localStorage.setItem(PROFILE_STORAGE_KEY, jsonStr);
   } catch (e) {}
   updateProfileUI();
 }
@@ -2488,6 +2506,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnReset) {
     btnReset.onclick = () => {
       if (confirm('Reset all high scores and player progress?')) {
+        try {
+          if (window.CrazyGames?.SDK?.data?.clear) {
+            window.CrazyGames.SDK.data.clear();
+          }
+        } catch (_) {}
         localStorage.clear();
         sessionStorage.clear();
         profile.bestTimes = { easy: null, medium: null, hard: null, extreme: null };
