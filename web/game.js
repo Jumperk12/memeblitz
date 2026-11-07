@@ -89,6 +89,36 @@ function getMemeUnlockRequirement(meme, fallbackIndex) {
   };
 }
 
+// Background Music (Meme Style Arcade Loop) Engine
+let bgmAudio = null;
+function initBGM() {
+  if (!bgmAudio) {
+    bgmAudio = new Audio('sounds/bgm_meme_loop.wav');
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.35;
+  }
+}
+
+function playBGM() {
+  if (profile.musicEnabled === false) return;
+  initBGM();
+  if (bgmAudio && bgmAudio.paused) {
+    bgmAudio.play().catch(() => {});
+  }
+}
+
+function pauseBGM() {
+  if (bgmAudio && !bgmAudio.paused) {
+    bgmAudio.pause();
+  }
+}
+
+function resumeBGM() {
+  if (profile.musicEnabled !== false) {
+    playBGM();
+  }
+}
+
 // CrazyGames SDK v3 Integration Module
 const CrazySDK = {
   initialized: false,
@@ -153,16 +183,20 @@ const CrazySDK = {
       return;
     }
     const previousSound = profile.soundEnabled;
+    pauseBGM();
     this.sdk.ad.requestAd('midgame', {
       adStarted: () => {
         profile.soundEnabled = false;
+        pauseBGM();
       },
       adFinished: () => {
         profile.soundEnabled = previousSound;
+        resumeBGM();
         if (onComplete) onComplete();
       },
       adError: (err, errData) => {
         profile.soundEnabled = previousSound;
+        resumeBGM();
         if (onComplete) onComplete();
       }
     });
@@ -174,16 +208,20 @@ const CrazySDK = {
       return;
     }
     const previousSound = profile.soundEnabled;
+    pauseBGM();
     this.sdk.ad.requestAd('rewarded', {
       adStarted: () => {
         profile.soundEnabled = false;
+        pauseBGM();
       },
       adFinished: () => {
         profile.soundEnabled = previousSound;
+        resumeBGM();
         if (onReward) onReward();
       },
       adError: (err, errData) => {
         profile.soundEnabled = previousSound;
+        resumeBGM();
         if (onError) onError(errData);
       }
     });
@@ -211,7 +249,90 @@ const DIFFICULTIES = {
   extreme: { name: 'Extreme', rows: 10, cols: 10, missing: 48, time: 20, tag: 'EXTREME', icon: '💀', accent: '#ff0055' }
 };
 
-// Categorized Achievements Catalog
+// Sound Packs System (matching iOS Build 3)
+const SOUND_PACKS = {
+  randomMix: {
+    id: 'randomMix',
+    name: 'Random Meme Mix',
+    desc: 'Surprise funny meme sound on every win!',
+    sounds: [
+      'meme_airhorn', 'meme_damage', 'meme_sheesh', 'meme_dramatic',
+      'meme_arcade', 'meme_nice', 'meme_triple', 'meme_wow', 'meme_tada'
+    ]
+  },
+  memeHype: {
+    id: 'memeHype',
+    name: 'MLG & Hype',
+    desc: 'Airhorns, Sheesh, and Oh Baby A Triple!',
+    sounds: ['meme_airhorn', 'meme_sheesh', 'meme_triple', 'meme_nice']
+  },
+  dramaticGoofy: {
+    id: 'dramaticGoofy',
+    name: 'Dramatic & Goofy',
+    desc: 'Dramatic Dun-Dun-Dun, Emotional Damage, and Boing',
+    sounds: ['meme_damage', 'meme_dramatic', 'meme_wow', 'meme_tada']
+  },
+  retroArcade: {
+    id: 'retroArcade',
+    name: '8-Bit Arcade',
+    desc: 'Classic 8-bit retro arcade fanfares & chimes',
+    sounds: ['meme_arcade', 'meme_wow', 'meme_tada']
+  }
+};
+
+// Competitive Challenge Quotes (10 Rotating Rivalry Quotes)
+const COMPETITIVE_CHALLENGE_QUOTES = [
+  {
+    title: "Someone's beating your time! ⏱️",
+    body: "Your leaderboard rank is slipping! Jump in now and reclaim your fastest solve time."
+  },
+  {
+    title: "Your Daily Streak is on the line! 🔥",
+    body: "Don't let your solving streak reset to 0. One quick puzzle keeps your crown intact!"
+  },
+  {
+    title: "Meme gods don't take days off 👑",
+    body: "Think you can conquer today's puzzle in under 20 seconds? Prove it."
+  },
+  {
+    title: "Are your reflexes slipping? ⚡",
+    body: "The leaderboards are moving without you. Show them who's boss!"
+  },
+  {
+    title: "Your brain cells miss you 🧠",
+    body: "Today's Daily Blitz puzzle just dropped. Go set an unbeatable record!"
+  },
+  {
+    title: "48-Piece Extreme is laughing at you 💀",
+    body: "Triumph over the hardest puzzle tier and earn the Apex Legend achievement!"
+  },
+  {
+    title: "A rival just climbed the ranks! 🏆",
+    body: "Take back your #1 spot on the global leaderboards before it's too late."
+  },
+  {
+    title: "The memes won't solve themselves! 🧩",
+    body: "New puzzles are waiting in the Vault. Flex your lightning blitz speed today."
+  },
+  {
+    title: "Don't let your streak freeze! ❄️",
+    body: "You were on a roll! Solve one quick meme to keep your fire burning."
+  },
+  {
+    title: "Speed Demon challenge! 🚀",
+    body: "Can you solve a Medium or Hard puzzle before the timer hits 30s?"
+  }
+];
+
+function rotateCompetitiveChallengeQuote() {
+  const quote = COMPETITIVE_CHALLENGE_QUOTES[Math.floor(Math.random() * COMPETITIVE_CHALLENGE_QUOTES.length)];
+  const titleEl = document.getElementById('challenge-quote-title');
+  const bodyEl = document.getElementById('challenge-quote-body');
+  if (titleEl && quote) titleEl.textContent = quote.title;
+  if (bodyEl && quote) bodyEl.textContent = quote.body;
+}
+
+// Categorized Achievements Catalog (19 True 3D AI Medallions)
 const ACHIEVEMENT_CATEGORIES = [
   'Puzzle Master',
   'Speed Demon',
@@ -223,39 +344,42 @@ const ACHIEVEMENT_CATEGORIES = [
 
 const ACHIEVEMENTS = [
   // 1. Puzzle Master
-  { id: 'first_win', title: 'First Spark', desc: 'Solve your very first meme puzzle', category: 'Puzzle Master', icon: '⚡', target: 1, xp: 100 },
-  { id: 'puzzle_novice', title: 'Novice Solver', desc: 'Complete 5 meme puzzles', category: 'Puzzle Master', icon: '🧩', target: 5, xp: 150 },
-  { id: 'puzzle_artisan', title: 'Puzzle Artisan', desc: 'Complete 25 meme puzzles', category: 'Puzzle Master', icon: '✨', target: 25, xp: 300 },
-  { id: 'puzzle_grandmaster', title: 'Grandmaster', desc: 'Conquer 50 puzzles across all tiers', category: 'Puzzle Master', icon: '👑', target: 50, xp: 600 },
+  { id: 'first_blitz', title: 'First Spark', desc: 'Solve your very first meme puzzle.', category: 'Puzzle Master', icon: 'achievement_icons/01_first_blitz.png', target: 1, xp: 100 },
+  { id: 'puzzle_novice', title: 'Novice Solver', desc: 'Complete 5 meme puzzles across any mode.', category: 'Puzzle Master', icon: 'achievement_icons/02_puzzle_novice.png', target: 5, xp: 150 },
+  { id: 'puzzle_artisan', title: 'Puzzle Artisan', desc: 'Complete 25 meme puzzles.', category: 'Puzzle Master', icon: 'achievement_icons/03_puzzle_artisan.png', target: 25, xp: 300 },
+  { id: 'puzzle_grandmaster', title: 'Grandmaster', desc: 'Conquer 50 puzzles across all difficulty tiers.', category: 'Puzzle Master', icon: 'achievement_icons/04_puzzle_grandmaster.png', target: 50, xp: 600 },
 
   // 2. Speed Demon
-  { id: 'speed_demon', title: 'Speed Demon', desc: 'Complete any puzzle in under 45 seconds', category: 'Speed Demon', icon: '⏱️', target: 1, xp: 120 },
-  { id: 'speed_sub45', title: 'Lightning Reflexes', desc: 'Solve any puzzle in under 45 seconds', category: 'Speed Demon', icon: '⚡', target: 1, xp: 180 },
-  { id: 'speed_sub20', title: 'Blitz Overdrive', desc: 'Solve a Medium+ puzzle in under 20 seconds', category: 'Speed Demon', icon: '🐇', target: 1, xp: 350 },
+  { id: 'speed_demon', title: 'Speed Demon', desc: 'Complete a puzzle with over 30s remaining.', category: 'Speed Demon', icon: 'achievement_icons/05_speed_demon.png', target: 1, xp: 120 },
+  { id: 'speed_sub45', title: 'Lightning Reflexes', desc: 'Solve any puzzle in under 45 seconds.', category: 'Speed Demon', icon: 'achievement_icons/06_speed_sub45.png', target: 1, xp: 180 },
+  { id: 'speed_sub20', title: 'Blitz Overdrive', desc: 'Solve a Medium or higher puzzle in under 20 seconds.', category: 'Speed Demon', icon: 'achievement_icons/07_speed_sub20.png', target: 1, xp: 350 },
 
   // 3. Perfectionist
-  { id: 'flawless', title: 'Flawless Run', desc: 'Solve a puzzle with zero incorrect placements', category: 'Perfectionist', icon: '💎', target: 1, xp: 150 },
-  { id: 'surgical_precision', title: 'Surgical Precision', desc: 'Achieve 3 flawless puzzle solves', category: 'Perfectionist', icon: '🎯', target: 3, xp: 300 },
+  { id: 'flawless', title: 'Flawless Victory', desc: 'Complete a puzzle with zero incorrect tile placements.', category: 'Perfectionist', icon: 'achievement_icons/08_flawless.png', target: 1, xp: 150 },
+  { id: 'surgical_precision', title: 'Surgical Precision', desc: 'Achieve 3 flawless puzzle solves.', category: 'Perfectionist', icon: 'achievement_icons/09_surgical_precision.png', target: 3, xp: 300 },
 
   // 4. Collector
-  { id: 'vault_explorer', title: 'Vault Explorer', desc: 'Browse through the meme collection', category: 'Collector', icon: '🎨', target: 1, xp: 80 },
-  { id: 'collector_10', title: 'Meme Connoisseur', desc: 'Unlock and solve 10 distinct memes', category: 'Collector', icon: '🖼️', target: 10, xp: 200 },
-  { id: 'collector_25', title: 'Culture Curator', desc: 'Unlock and solve 25 distinct memes', category: 'Collector', icon: '✨', target: 25, xp: 400 },
-  { id: 'meme_master', title: 'Meme God', desc: 'Master all curated meme puzzles', category: 'Collector', icon: '🌟', target: 100, xp: 1000 },
+  { id: 'vault_explorer', title: 'Vault Explorer', desc: 'Browse the curated Meme Vault collection.', category: 'Collector', icon: 'achievement_icons/10_vault_explorer.png', target: 1, xp: 80 },
+  { id: 'collector_10', title: 'Meme Connoisseur', desc: 'Unlock and restore 10 unique meme puzzles.', category: 'Collector', icon: 'achievement_icons/11_collector_10.png', target: 10, xp: 200 },
+  { id: 'collector_25', title: 'Culture Curator', desc: 'Unlock and restore 25 unique meme puzzles.', category: 'Collector', icon: 'achievement_icons/12_collector_25.png', target: 25, xp: 400 },
+  { id: 'meme_master', title: 'Meme God', desc: 'Restore all curated memes in the entire catalog.', category: 'Collector', icon: 'achievement_icons/13_meme_master.png', target: 100, xp: 1000 },
 
   // 5. Streak Hunter
-  { id: 'streak_3', title: 'On A Roll', desc: 'Achieve a 3-puzzle solving streak', category: 'Streak Hunter', icon: '🔥', target: 3, xp: 150 },
-  { id: 'streak_5', title: 'Blazing Trail', desc: 'Achieve a 5-puzzle solving streak', category: 'Streak Hunter', icon: '💥', target: 5, xp: 300 },
-  { id: 'streak_10', title: 'Unstoppable Force', desc: 'Achieve a 10-puzzle solving streak', category: 'Streak Hunter', icon: '⚡', target: 10, xp: 600 },
+  { id: 'streak_3', title: 'On A Roll', desc: 'Achieve a 3-puzzle solving streak.', category: 'Streak Hunter', icon: 'achievement_icons/14_streak_3.png', target: 3, xp: 150 },
+  { id: 'streak_5', title: 'Blazing Trail', desc: 'Achieve a 5-puzzle solving streak.', category: 'Streak Hunter', icon: 'achievement_icons/15_streak_5.png', target: 5, xp: 300 },
+  { id: 'streak_10', title: 'Unstoppable Force', desc: 'Achieve a 10-puzzle solving streak.', category: 'Streak Hunter', icon: 'achievement_icons/16_streak_10.png', target: 10, xp: 600 },
 
   // 6. Hardcore
-  { id: 'hard_core', title: 'Galaxy Brain', desc: 'Conquer a 10×10 Hard puzzle before time expires', category: 'Hardcore', icon: '🧠', target: 1, xp: 250 },
-  { id: 'extreme_champion', title: 'Apex Legend', desc: 'Solve an Extreme Hard 48-piece puzzle', category: 'Hardcore', icon: '💀', target: 1, xp: 500 }
+  { id: 'galaxy_brain', title: 'Galaxy Brain', desc: 'Conquer a Hard 10×10 puzzle before time expires.', category: 'Hardcore', icon: 'achievement_icons/17_galaxy_brain.png', target: 1, xp: 250 },
+  { id: 'extreme_champion', title: 'Apex Legend', desc: 'Triumph over an Extreme Hard 48-piece puzzle.', category: 'Hardcore', icon: 'achievement_icons/18_extreme_champion.png', target: 1, xp: 500 },
+  { id: 'second_wind', title: 'Second Wind', desc: 'Watch a rewarded ad to continue and claim victory.', category: 'Hardcore', icon: 'achievement_icons/19_second_wind.png', target: 1, xp: 100 }
 ];
 
 // Persistent Player Profile
 const profile = {
   soundEnabled: true,
+  musicEnabled: true,
+  selectedSoundPack: 'randomMix',
   hapticsEnabled: true,
   selectedDifficulty: 'easy',
   bestTimes: { easy: null, medium: null, hard: null, extreme: null },
@@ -265,7 +389,12 @@ const profile = {
   achievements: [],
   completedModes: [],
   // Unlocked level index per mode (0-based: Level 1 is index 0, unlocked by default)
-  unlockedLevel: { easy: 0, medium: 0, hard: 0, extreme: 0 }
+  unlockedLevel: { easy: 0, medium: 0, hard: 0, extreme: 0 },
+  streak: 0,
+  flawlessCount: 0,
+  dailyStreak: 0,
+  lastCompletedDailyDate: null,
+  xp: 0
 };
 
 function isModeFullyCompleted(mode) {
@@ -341,6 +470,8 @@ function loadProfile() {
       if (!profile.unlockedLevel || typeof profile.unlockedLevel !== 'object') {
         profile.unlockedLevel = { easy: 0, medium: 0, hard: 0, extreme: 0 };
       }
+      if (profile.musicEnabled === undefined) profile.musicEnabled = true;
+      if (!profile.selectedSoundPack) profile.selectedSoundPack = 'randomMix';
     }
   } catch (e) {
     console.warn('Could not load profile:', e);
@@ -394,9 +525,16 @@ function updateProfileUI() {
 
   // Settings toggles
   const soundToggle = document.getElementById('toggle-sound');
+  const musicToggle = document.getElementById('toggle-music');
   const hapticsToggle = document.getElementById('toggle-haptics');
   if (soundToggle) soundToggle.checked = profile.soundEnabled;
+  if (musicToggle) musicToggle.checked = profile.musicEnabled !== false;
   if (hapticsToggle) hapticsToggle.checked = profile.hapticsEnabled;
+
+  const currentPack = profile.selectedSoundPack || 'randomMix';
+  document.querySelectorAll('.sound-pack-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.pack === currentPack);
+  });
 
   document.querySelectorAll('.diff-toggle-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.diff === profile.selectedDifficulty);
@@ -566,6 +704,14 @@ function switchScreen(screenId) {
     document.body.classList.remove('in-game');
   }
 
+  if (screenId === 'screen-home') {
+    rotateCompetitiveChallengeQuote();
+  }
+
+  if (screenId === 'screen-achievements') {
+    renderAchievements();
+  }
+
   if (screenId === 'screen-collection') {
     unlockAchievement('vault_explorer');
     renderCatalog();
@@ -607,23 +753,27 @@ function playWarningBeep() {
   playTone(440, 'square', 0.08);
 }
 
-const MEME_WIN_SOUNDS = [
-  'sounds/meme_airhorn.wav',
-  'sounds/meme_damage.wav',
-  'sounds/meme_sheesh.wav',
-  'sounds/meme_dramatic.wav',
-  'sounds/meme_arcade.wav',
-  'sounds/meme_nice.wav',
-  'sounds/meme_triple.wav',
-  'sounds/meme_wow.wav',
-  'sounds/meme_tada.wav'
-];
+function playWarningTick(isUrgent = false) {
+  if (!profile.soundEnabled) return;
+  triggerHaptic(isUrgent ? 'heavy' : 'medium');
+  try {
+    const soundFile = isUrgent ? 'sounds/timer_urgent.wav' : 'sounds/timer_tick.wav';
+    const tickAudio = new Audio(soundFile);
+    tickAudio.volume = isUrgent ? 0.95 : 0.75;
+    tickAudio.play().catch(() => {
+      playTone(isUrgent ? 880 : 440, 'square', 0.08);
+    });
+  } catch (e) {
+    playTone(isUrgent ? 880 : 440, 'square', 0.08);
+  }
+}
 
-function playWinSound() {
+function playWinSound(customSoundName) {
   if (!profile.soundEnabled) return;
   try {
-    const chosen = MEME_WIN_SOUNDS[Math.floor(Math.random() * MEME_WIN_SOUNDS.length)];
-    const audio = new Audio(chosen);
+    const pack = SOUND_PACKS[profile.selectedSoundPack] || SOUND_PACKS.randomMix;
+    const soundBase = customSoundName || pack.sounds[Math.floor(Math.random() * pack.sounds.length)];
+    const audio = new Audio(`sounds/${soundBase}.wav`);
     audio.volume = 0.85;
     audio.play().catch(() => {
       const notes = [523.25, 659.25, 783.99, 1046.5];
@@ -757,7 +907,9 @@ function renderAchievements() {
         <span style="font-size:0.68rem; font-weight:900; color:#fbbf24; background:rgba(251,191,36,0.18); padding:3px 8px; border-radius:999px;">+${featured.xp || 100} XP</span>
       </div>
       <div style="display:flex; align-items:center; gap:12px;">
-        <div style="font-size:1.8rem; width:44px; height:44px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border-radius:50%; border:1.5px solid rgba(251,191,36,0.5);">${featured.icon}</div>
+        <div style="width:48px; height:48px; display:flex; align-items:center; justify-content:center; border-radius:50%; overflow:hidden; border:1.5px solid rgba(251,191,36,0.5);">
+          ${featured.icon && featured.icon.includes('/') ? `<img src="${featured.icon}" class="feat-badge-img" alt="${featured.title}">` : `<div style="font-size:1.8rem;">${featured.icon}</div>`}
+        </div>
         <div style="flex:1;">
           <div style="font-size:0.95rem; font-weight:800; color:#fff;">${featured.title}</div>
           <div style="font-size:0.75rem; color:rgba(255,255,255,0.65);">${featured.desc}</div>
@@ -808,7 +960,9 @@ function renderAchievements() {
       const card = document.createElement('div');
       card.className = `achievement-card ${isUnlocked ? 'unlocked' : ''}`;
       card.innerHTML = `
-        <div class="ach-icon">${ach.icon}</div>
+        <div class="ach-icon">
+          ${ach.icon && ach.icon.includes('/') ? `<img src="${ach.icon}" class="ach-badge-img" alt="${ach.title}">` : ach.icon}
+        </div>
         <div class="ach-info">
           <span class="ach-title">${ach.title}</span>
           <span class="ach-desc">${ach.desc}</span>
@@ -823,13 +977,19 @@ function renderAchievements() {
 }
 
 function unlockAchievement(id) {
-  if (!profile.achievements.includes(id)) {
-    profile.achievements.push(id);
-    profile.xp = (profile.xp || 0) + 100;
+  let mappedId = id;
+  if (id === 'first_win') mappedId = 'first_blitz';
+  if (id === 'hard_core') mappedId = 'galaxy_brain';
+
+  if (!profile.achievements.includes(mappedId)) {
+    profile.achievements.push(mappedId);
+    const ach = ACHIEVEMENTS.find(a => a.id === mappedId);
+    const xpReward = (ach && ach.xp) ? ach.xp : 100;
+    profile.xp = (profile.xp || 0) + xpReward;
     saveProfile();
-    const ach = ACHIEVEMENTS.find(a => a.id === id);
-    if (ach) {
-      showToast(`🏆 Achievement Unlocked: ${ach.title}!`);
+    const targetAch = ach || ACHIEVEMENTS.find(a => a.id === id);
+    if (targetAch) {
+      showToast(`🏆 Achievement Unlocked: ${targetAch.title}!`);
       playTone(880, 'sine', 0.2);
     }
   }
@@ -1532,8 +1692,9 @@ function startCountdown() {
     updateTimerUI();
 
     if (state.timeRemaining <= 10 && state.timeRemaining > 0) {
-      playWarningBeep();
-      triggerHaptic('light');
+      playWarningTick(true);
+    } else if (state.timeRemaining <= 25 && state.timeRemaining > 10) {
+      playWarningTick(false);
     }
 
     if (state.timeRemaining <= 0) {
@@ -1647,7 +1808,6 @@ function checkCompletion() {
       profile.solvedMemeIds.push(state.currentMeme.id);
     }
 
-    profile.totalSolved = (profile.totalSolved || 0) + 1;
     profile.streak = (profile.streak || 0) + 1;
 
     // XP calculation
@@ -1678,12 +1838,22 @@ function checkCompletion() {
     }
 
     // Achievements check
+    unlockAchievement('first_blitz');
     unlockAchievement('first_win');
     if (elapsed < 45) unlockAchievement('speed_demon');
     if (elapsed < 45) unlockAchievement('speed_sub45');
     if (elapsed <= 20 && (state.mode === 'medium' || state.mode === 'hard' || state.mode === 'extreme')) unlockAchievement('speed_sub20');
-    if (state.mistakeCount === 0) unlockAchievement('flawless');
-    if (state.mode === 'hard') unlockAchievement('hard_core');
+    if (state.mistakeCount === 0) {
+      profile.flawlessCount = (profile.flawlessCount || 0) + 1;
+      unlockAchievement('flawless');
+      if (profile.flawlessCount >= 3) {
+        unlockAchievement('surgical_precision');
+      }
+    }
+    if (state.mode === 'hard') {
+      unlockAchievement('galaxy_brain');
+      unlockAchievement('hard_core');
+    }
     if (state.mode === 'extreme') unlockAchievement('extreme_champion');
     if (profile.totalSolved >= 5) unlockAchievement('puzzle_novice');
     if (profile.totalSolved >= 25) unlockAchievement('puzzle_artisan');
@@ -1694,6 +1864,8 @@ function checkCompletion() {
     if (profile.streak >= 3) unlockAchievement('streak_3');
     if (profile.streak >= 5) unlockAchievement('streak_5');
     if (profile.streak >= 10) unlockAchievement('streak_10');
+
+    rotateCompetitiveChallengeQuote();
 
     saveProfile();
     renderCatalog();
@@ -1753,25 +1925,46 @@ function fireConfetti() {
   animate();
 }
 
-// Rewarded Ad Simulation
-document.getElementById('btn-watch-ad').onclick = () => {
-  const btn = document.getElementById('btn-watch-ad');
-  btn.disabled = true;
-  btn.textContent = 'Watching Ad… (simulated 2s)';
-  
-  setTimeout(() => {
-    state.isTimeUp = false;
-    state.timeRemaining = 20;
-    state.totalTime = Math.max(state.totalTime, 20);
-    failModal.classList.remove('active');
-    btn.disabled = false;
-    btn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm6 2.5v7l6-3.5-6-3.5z"/></svg>
-      Watch Ad to Continue (+20s)
-    `;
-    startCountdown();
-  }, 2000);
-};
+// Rewarded Ad (CrazyGames SDK v3 + Second Wind Achievement)
+const btnWatchAd = document.getElementById('btn-watch-ad');
+if (btnWatchAd) {
+  btnWatchAd.onclick = () => {
+    btnWatchAd.disabled = true;
+    btnWatchAd.textContent = 'Loading Ad…';
+
+    CrazySDK.requestRewarded(
+      () => {
+        // onReward success
+        state.isTimeUp = false;
+        state.timeRemaining = 20;
+        state.totalTime = Math.max(state.totalTime, 20);
+        failModal.classList.remove('active');
+        btnWatchAd.disabled = false;
+        btnWatchAd.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm6 2.5v7l6-3.5-6-3.5z"/></svg>
+          Watch Ad to Continue (+20s)
+        `;
+        unlockAchievement('second_wind');
+        showToast('💨 Second Wind! +20s added');
+        startCountdown();
+      },
+      () => {
+        // onError fallback (give user a chance anyway)
+        state.isTimeUp = false;
+        state.timeRemaining = 20;
+        state.totalTime = Math.max(state.totalTime, 20);
+        failModal.classList.remove('active');
+        btnWatchAd.disabled = false;
+        btnWatchAd.innerHTML = `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm6 2.5v7l6-3.5-6-3.5z"/></svg>
+          Watch Ad to Continue (+20s)
+        `;
+        unlockAchievement('second_wind');
+        startCountdown();
+      }
+    );
+  };
+}
 
 // UI Interactions & Controls Wiring
 function initLaunchScreen() {
@@ -2071,6 +2264,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
+  const toggleMusic = document.getElementById('toggle-music');
+  if (toggleMusic) {
+    toggleMusic.onchange = (e) => {
+      profile.musicEnabled = e.target.checked;
+      saveProfile();
+      if (profile.musicEnabled) {
+        playBGM();
+      } else {
+        pauseBGM();
+      }
+    };
+  }
+
   const toggleHaptics = document.getElementById('toggle-haptics');
   if (toggleHaptics) {
     toggleHaptics.onchange = (e) => {
@@ -2078,6 +2284,130 @@ document.addEventListener('DOMContentLoaded', async () => {
       saveProfile();
     };
   }
+
+  // Sound Pack Buttons
+  document.querySelectorAll('.sound-pack-btn').forEach(btn => {
+    btn.onclick = () => {
+      const packKey = btn.dataset.pack;
+      if (SOUND_PACKS[packKey]) {
+        profile.selectedSoundPack = packKey;
+        saveProfile();
+        updateProfileUI();
+        const pack = SOUND_PACKS[packKey];
+        const preview = pack.sounds[Math.floor(Math.random() * pack.sounds.length)];
+        playWinSound(preview);
+      }
+    };
+  });
+
+  // Leaderboard Modal Logic
+  function renderLeaderboardModal() {
+    const listEl = document.getElementById('leaderboard-ranks-list');
+    if (!listEl) return;
+
+    const fmt = (sec) => {
+      if (sec == null) return '--:--';
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    };
+
+    const records = [
+      {
+        medal: '🥇',
+        name: 'Easy Blitz Record',
+        desc: 'Fastest 6×6 puzzle solve',
+        score: fmt(profile.bestTimes.easy),
+        highlight: profile.bestTimes.easy != null
+      },
+      {
+        medal: '🥈',
+        name: 'Medium Blitz Record',
+        desc: 'Fastest 8×8 puzzle solve',
+        score: fmt(profile.bestTimes.medium),
+        highlight: profile.bestTimes.medium != null
+      },
+      {
+        medal: '🥉',
+        name: 'Hard Blitz Record',
+        desc: 'Fastest 10×10 puzzle solve',
+        score: fmt(profile.bestTimes.hard),
+        highlight: profile.bestTimes.hard != null
+      },
+      {
+        medal: '💀',
+        name: 'Extreme 48-Piece Record',
+        desc: 'Hardcore blitz challenge solve',
+        score: fmt(profile.bestTimes.extreme),
+        highlight: profile.bestTimes.extreme != null
+      },
+      {
+        medal: '🔥',
+        name: 'Solving Streak',
+        desc: 'Current consecutive solves',
+        score: `${profile.streak || 0} in a row`,
+        highlight: (profile.streak || 0) > 0
+      },
+      {
+        medal: '🧩',
+        name: 'Total Memes Restored',
+        desc: 'Catalog completion count',
+        score: `${profile.totalSolved || 0} solved`,
+        highlight: (profile.totalSolved || 0) > 0
+      }
+    ];
+
+    listEl.innerHTML = records.map(r => `
+      <div class="leaderboard-rank-card ${r.highlight ? 'highlight' : ''}">
+        <div class="lb-rank-info">
+          <span class="lb-medal">${r.medal}</span>
+          <div class="lb-title-group">
+            <span class="lb-name">${r.name}</span>
+            <span class="lb-desc">${r.desc}</span>
+          </div>
+        </div>
+        <span class="lb-score">${r.score}</span>
+      </div>
+    `).join('');
+  }
+
+  const btnTopLeaderboard = document.getElementById('btn-top-leaderboard');
+  const leaderboardModal = document.getElementById('leaderboard-modal');
+  const btnCloseLeaderboard = document.getElementById('btn-close-leaderboard');
+  const btnCloseLeaderboardX = document.getElementById('btn-close-leaderboard-x');
+
+  function openLeaderboard() {
+    renderLeaderboardModal();
+    if (leaderboardModal) leaderboardModal.classList.add('active');
+  }
+  function closeLeaderboard() {
+    if (leaderboardModal) leaderboardModal.classList.remove('active');
+  }
+
+  if (btnTopLeaderboard) btnTopLeaderboard.onclick = openLeaderboard;
+  if (btnCloseLeaderboard) btnCloseLeaderboard.onclick = closeLeaderboard;
+  if (btnCloseLeaderboardX) btnCloseLeaderboardX.onclick = closeLeaderboard;
+  if (leaderboardModal) {
+    leaderboardModal.onclick = (e) => {
+      if (e.target.id === 'leaderboard-modal') closeLeaderboard();
+    };
+  }
+
+  // Competitive Challenge Banner
+  const challengeBanner = document.getElementById('blitz-challenge-banner');
+  if (challengeBanner) {
+    challengeBanner.onclick = openLeaderboard;
+  }
+  rotateCompetitiveChallengeQuote();
+
+  // BGM Autoplay on First Interaction
+  function tryAutoStartBGM() {
+    if (profile.musicEnabled !== false) {
+      playBGM();
+    }
+  }
+  window.addEventListener('pointerdown', tryAutoStartBGM, { once: true });
+  window.addEventListener('keydown', tryAutoStartBGM, { once: true });
 
   document.querySelectorAll('.diff-toggle-btn').forEach(btn => {
     btn.onclick = () => {
