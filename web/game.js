@@ -2543,8 +2543,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Init Data
   renderCatalog();
-  await fetchRemoteCatalog();
-  setupRemoteEventSource();
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    await fetchRemoteCatalog();
+    setupRemoteEventSource();
+  }
   const initialParams = new URLSearchParams(window.location.search);
   const initialFilter = initialParams.get('filter');
   if (initialFilter && ['all', 'easy', 'medium', 'hard', 'extreme'].includes(initialFilter.toLowerCase())) {
