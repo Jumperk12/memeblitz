@@ -89,7 +89,110 @@ function getMemeUnlockRequirement(meme, fallbackIndex) {
   };
 }
 
-let MEMES = [
+// CrazyGames SDK v3 Integration Module
+const CrazySDK = {
+  initialized: false,
+  sdk: null,
+
+  async init() {
+    try {
+      if (window.CrazyGames && window.CrazyGames.SDK) {
+        this.sdk = window.CrazyGames.SDK;
+        await this.sdk.init();
+        this.initialized = true;
+        console.log('[CrazyGames] SDK v3 initialized successfully');
+      }
+    } catch (e) {
+      console.warn('[CrazyGames] Init failed or running outside CrazyGames:', e);
+    }
+  },
+
+  loadingStart() {
+    try {
+      if (this.initialized && this.sdk?.game?.loadingStart) {
+        this.sdk.game.loadingStart();
+      }
+    } catch (e) {}
+  },
+
+  loadingStop() {
+    try {
+      if (this.initialized && this.sdk?.game?.loadingStop) {
+        this.sdk.game.loadingStop();
+      }
+    } catch (e) {}
+  },
+
+  gameplayStart() {
+    try {
+      if (this.initialized && this.sdk?.game?.gameplayStart) {
+        this.sdk.game.gameplayStart();
+      }
+    } catch (e) {}
+  },
+
+  gameplayStop() {
+    try {
+      if (this.initialized && this.sdk?.game?.gameplayStop) {
+        this.sdk.game.gameplayStop();
+      }
+    } catch (e) {}
+  },
+
+  happytime() {
+    try {
+      if (this.initialized && this.sdk?.game?.happytime) {
+        this.sdk.game.happytime();
+      }
+    } catch (e) {}
+  },
+
+  requestMidgame(onComplete) {
+    if (!this.initialized || !this.sdk?.ad?.requestAd) {
+      if (onComplete) onComplete();
+      return;
+    }
+    const previousSound = profile.soundEnabled;
+    this.sdk.ad.requestAd('midgame', {
+      adStarted: () => {
+        profile.soundEnabled = false;
+      },
+      adFinished: () => {
+        profile.soundEnabled = previousSound;
+        if (onComplete) onComplete();
+      },
+      adError: (err, errData) => {
+        profile.soundEnabled = previousSound;
+        if (onComplete) onComplete();
+      }
+    });
+  },
+
+  requestRewarded(onReward, onError) {
+    if (!this.initialized || !this.sdk?.ad?.requestAd) {
+      if (onReward) onReward();
+      return;
+    }
+    const previousSound = profile.soundEnabled;
+    this.sdk.ad.requestAd('rewarded', {
+      adStarted: () => {
+        profile.soundEnabled = false;
+      },
+      adFinished: () => {
+        profile.soundEnabled = previousSound;
+        if (onReward) onReward();
+      },
+      adError: (err, errData) => {
+        profile.soundEnabled = previousSound;
+        if (onError) onError(errData);
+      }
+    });
+  }
+};
+
+let MEMES = (window.MEMES_CATALOG && Array.isArray(window.MEMES_CATALOG) && window.MEMES_CATALOG.length > 0)
+  ? window.MEMES_CATALOG
+  : [
   { id: 'easy_001', title: 'Easy Meme 1', src: 'memes/easy_001.jpg', mode: 'easy', topText: '', bottomText: '' },
   { id: 'easy_002', title: 'Easy Meme 2', src: 'memes/easy_002.jpg', mode: 'easy', topText: '', bottomText: '' },
   { id: 'easy_003', title: 'Easy Meme 3', src: 'memes/easy_003.jpg', mode: 'easy', topText: '', bottomText: '' },
@@ -1217,6 +1320,8 @@ async function startPuzzle(mode = null, meme = null) {
   if (mode) state.mode = mode;
   if (meme) state.currentMeme = meme;
 
+  CrazySDK.gameplayStart();
+
   clearInterval(state.timerInterval);
   state.isComplete = false;
   state.isTimeUp = false;
@@ -1497,6 +1602,7 @@ function triggerFailure() {
     failCircle.style.strokeDashoffset = `${offset}`;
   }
 
+  CrazySDK.gameplayStop();
   failModal.classList.add('active');
 }
 
@@ -1591,6 +1697,9 @@ function checkCompletion() {
 
     saveProfile();
     renderCatalog();
+
+    CrazySDK.happytime();
+    CrazySDK.gameplayStop();
 
     setTimeout(() => winModal.classList.add('active'), 600);
   }
@@ -1716,6 +1825,10 @@ function initLaunchScreen() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  CrazySDK.loadingStart();
+  await CrazySDK.init();
+  CrazySDK.loadingStop();
+
   initLaunchScreen();
   loadProfile();
   updateProfileUI();
@@ -1869,15 +1982,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnWinNew) {
     btnWinNew.onclick = () => {
       winModal.classList.remove('active');
-      let pool = MEMES.filter(m => m.mode === state.mode);
-      if (pool.length === 0) pool = MEMES;
-      const nextIdx = (state.currentLevelIndex != null ? state.currentLevelIndex : 0) + 1;
-      if (nextIdx < pool.length) {
-        state.currentLevelIndex = nextIdx;
-        startPuzzle(state.mode, pool[nextIdx]);
-      } else {
-        openLevelSelect(state.mode);
-      }
+      CrazySDK.requestMidgame(() => {
+        let pool = MEMES.filter(m => m.mode === state.mode);
+        if (pool.length === 0) pool = MEMES;
+        const nextIdx = (state.currentLevelIndex != null ? state.currentLevelIndex : 0) + 1;
+        if (nextIdx < pool.length) {
+          state.currentLevelIndex = nextIdx;
+          startPuzzle(state.mode, pool[nextIdx]);
+        } else {
+          openLevelSelect(state.mode);
+        }
+      });
     };
   }
 
@@ -1885,7 +2000,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnFailRetry) {
     btnFailRetry.onclick = () => {
       failModal.classList.remove('active');
-      startPuzzle(state.mode, state.currentMeme);
+      CrazySDK.requestMidgame(() => {
+        startPuzzle(state.mode, state.currentMeme);
+      });
     };
   }
 
