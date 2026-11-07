@@ -482,9 +482,18 @@ function getDailyBlitzInfo() {
   };
 }
 
+const PROFILE_STORAGE_KEY = 'meme_blitz_profile_v3';
+
+// Clear any legacy test/mock data from previous development builds
+try {
+  localStorage.removeItem('meme_blitz_profile_v2');
+  localStorage.removeItem('meme_blitz_profile');
+  localStorage.removeItem('meme_blitz_profile_v1');
+} catch (_) {}
+
 function loadProfile() {
   try {
-    const raw = localStorage.getItem('meme_blitz_profile_v2');
+    const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (raw) {
       const data = JSON.parse(raw);
       Object.assign(profile, data);
@@ -504,7 +513,7 @@ function loadProfile() {
 
 function saveProfile() {
   try {
-    localStorage.setItem('meme_blitz_profile_v2', JSON.stringify(profile));
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
   } catch (e) {}
   updateProfileUI();
 }
