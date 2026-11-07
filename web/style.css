@@ -3438,7 +3438,8 @@ input:checked + .slider:before {
   width: 100%;
   height: 100%;
   height: 100dvh;
-  background-color: #000;
+  background: radial-gradient(circle at center, #1e1338 0%, #0c0919 70%, #05030a 100%);
+  background-color: #0c0919;
   z-index: 999999;
   display: flex;
   align-items: center;
@@ -3458,10 +3459,13 @@ input:checked + .slider:before {
 .launch-video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  max-width: 100vw;
+  max-height: 100vh;
+  max-height: 100dvh;
+  object-fit: contain;
   object-position: center;
   display: block;
-  background-color: #000;
+  background-color: transparent;
 }
 
 .btn-skip-launch {
