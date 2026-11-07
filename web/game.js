@@ -1970,7 +1970,6 @@ if (btnWatchAd) {
 function initLaunchScreen() {
   const overlay = document.getElementById('launch-screen');
   const video = document.getElementById('launch-video');
-  const skipBtn = document.getElementById('btn-skip-launch');
 
   if (!overlay || !video) return;
 
@@ -1986,14 +1985,31 @@ function initLaunchScreen() {
     setTimeout(() => {
       overlay.style.display = 'none';
     }, 500);
+
+    // Automatically start background music once the launch has finished!
+    if (profile.musicEnabled !== false) {
+      playBGM();
+    }
   }
 
-  // Unskippable launch animation: clicks/taps will not dismiss the launch screen.
-  // Video must play until finished (or safety timeout).
-  overlay.addEventListener('click', (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-  });
+  // Ensure video sound is enabled
+  video.muted = false;
+  video.volume = 1.0;
+
+  // Clicking during launch ensures audio context is active, unmutes video, and queues BGM
+  const unlockAudio = () => {
+    try {
+      video.muted = false;
+      video.volume = 1.0;
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      initBGM();
+    } catch (_) {}
+  };
+  overlay.addEventListener('pointerdown', unlockAudio);
+  window.addEventListener('pointerdown', unlockAudio, { once: true });
+  window.addEventListener('keydown', unlockAudio, { once: true });
 
   video.addEventListener('ended', () => {
     dismissLaunchScreen();
@@ -2006,8 +2022,19 @@ function initLaunchScreen() {
   const playPromise = video.play();
   if (playPromise !== undefined) {
     playPromise.catch(() => {
+      // Browser blocked unmuted autoplay before user interaction:
+      // Fallback to muted playback so animation runs, and unmute on first tap
       video.muted = true;
       video.play().catch(() => {});
+      const tryUnmute = () => {
+        video.muted = false;
+        video.volume = 1.0;
+        unlockAudio();
+        window.removeEventListener('pointerdown', tryUnmute);
+        window.removeEventListener('keydown', tryUnmute);
+      };
+      window.addEventListener('pointerdown', tryUnmute, { once: true });
+      window.addEventListener('keydown', tryUnmute, { once: true });
     });
   }
 
