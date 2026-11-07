@@ -95,7 +95,7 @@ let crazyMuted = false;
 
 function initBGM() {
   if (!bgmAudio) {
-    bgmAudio = new Audio('sounds/bgm_meme_loop.wav');
+    bgmAudio = new Audio('sounds/bgm_meme_loop.m4a');
     bgmAudio.loop = true;
     bgmAudio.volume = 0.35;
   }

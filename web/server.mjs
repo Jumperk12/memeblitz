@@ -31,7 +31,10 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon',
   '.mp4': 'video/mp4',
   '.m4v': 'video/mp4',
-  '.webm': 'video/webm'
+  '.webm': 'video/webm',
+  '.m4a': 'audio/mp4',
+  '.mp3': 'audio/mpeg',
+  '.wav': 'audio/wav'
 };
 
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.heic']);
