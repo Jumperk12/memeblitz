@@ -91,6 +91,8 @@ function getMemeUnlockRequirement(meme, fallbackIndex) {
 
 // Background Music (Meme Style Arcade Loop) Engine
 let bgmAudio = null;
+let crazyMuted = false;
+
 function initBGM() {
   if (!bgmAudio) {
     bgmAudio = new Audio('sounds/bgm_meme_loop.wav');
@@ -100,7 +102,7 @@ function initBGM() {
 }
 
 function playBGM() {
-  if (profile.musicEnabled === false) return;
+  if (crazyMuted || profile.musicEnabled === false) return;
   const launchOverlay = document.getElementById('launch-screen');
   if (launchOverlay && !launchOverlay.classList.contains('launch-dismissed') && launchOverlay.style.display !== 'none') {
     return;
@@ -135,6 +137,24 @@ const CrazySDK = {
         await this.sdk.init();
         this.initialized = true;
         console.log('[CrazyGames] SDK v3 initialized successfully');
+
+        // CrazyGames SDK Audio Muting Support
+        if (this.sdk?.game?.settings?.muteAudio) {
+          crazyMuted = true;
+          pauseBGM();
+        }
+        if (this.sdk?.game?.addSettingsChangeListener) {
+          this.sdk.game.addSettingsChangeListener((newSettings) => {
+            if (newSettings && typeof newSettings.muteAudio === 'boolean') {
+              crazyMuted = newSettings.muteAudio;
+              if (crazyMuted) {
+                pauseBGM();
+              } else if (profile.musicEnabled !== false) {
+                resumeBGM();
+              }
+            }
+          });
+        }
       }
     } catch (e) {
       console.warn('[CrazyGames] Init failed or running outside CrazyGames:', e);
@@ -728,7 +748,7 @@ function switchScreen(screenId) {
 // Web Audio API
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playTone(freq, type = 'sine', duration = 0.12) {
-  if (!profile.soundEnabled) return;
+  if (crazyMuted || !profile.soundEnabled) return;
   try {
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const osc = audioCtx.createOscillator();
@@ -758,7 +778,7 @@ function playWarningBeep() {
 }
 
 function playWarningTick(isUrgent = false) {
-  if (!profile.soundEnabled) return;
+  if (crazyMuted || !profile.soundEnabled) return;
   triggerHaptic(isUrgent ? 'heavy' : 'medium');
   try {
     const soundFile = isUrgent ? 'sounds/timer_urgent.wav' : 'sounds/timer_tick.wav';
@@ -773,7 +793,7 @@ function playWarningTick(isUrgent = false) {
 }
 
 function playWinSound(customSoundName) {
-  if (!profile.soundEnabled) return;
+  if (crazyMuted || !profile.soundEnabled) return;
   try {
     const pack = SOUND_PACKS[profile.selectedSoundPack] || SOUND_PACKS.randomMix;
     const soundBase = customSoundName || pack.sounds[Math.floor(Math.random() * pack.sounds.length)];
